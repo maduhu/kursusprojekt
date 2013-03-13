@@ -1,3 +1,4 @@
 magento-md5
 magento-admin
-protected/libraries/vendor/magento/var
+magento/var
+.idea/
