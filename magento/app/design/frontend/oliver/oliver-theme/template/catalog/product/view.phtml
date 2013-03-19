@@ -47,17 +47,32 @@
             </div>
 
             <div class="product-shop">
+
                 <div class="product-name">
                     <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
                 </div>
 
-                <?php if ($this->canEmailToFriend()): ?>
-                    <p class="email-friend"><a
-                            href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a>
-                    </p>
-                <?php endif; ?>
+                <?php if ($_product->getShortDescription()): ?>
+                    <div class="short-description">
+                        <h2><?php echo $this->__('Quick Overview') ?></h2>
 
-                <?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
+                        <div
+                            class="std"><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
+                    </div>
+                <?php endif;?>
+
+                <div class="product-collateral">
+                    <?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html): ?>
+                        <div class="box-collateral <?php echo "box-{$alias}" ?>">
+                            <?php if ($title = $this->getChildData($alias, 'title')): ?>
+                                <h2><?php echo $this->escapeHtml($title); ?></h2>
+                            <?php endif;?>
+                            <?php echo $html; ?>
+                        </div>
+                    <?php endforeach;?>
+                    <?php echo $this->getChildHtml('upsell_products') ?>
+                </div>
+
                 <?php echo $this->getChildHtml('alert_urls') ?>
                 <?php echo $this->getChildHtml('product_type_data') ?>
                 <?php echo $this->getTierPriceHtml() ?>
@@ -79,15 +94,6 @@
                         <?php echo $this->getChildHtml('addto') ?>
                     </div>
                 <?php endif; ?>
-
-                <?php if ($_product->getShortDescription()): ?>
-                    <div class="short-description">
-                        <h2><?php echo $this->__('Quick Overview') ?></h2>
-
-                        <div
-                            class="std"><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
-                    </div>
-                <?php endif;?>
 
                 <?php echo $this->getChildHtml('other');?>
 
@@ -157,18 +163,5 @@
             }.bind(productAddToCartForm);
             //]]>
         </script>
-    </div>
-
-    <div class="product-collateral">
-        <?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html): ?>
-            <div class="box-collateral <?php echo "box-{$alias}" ?>">
-                <?php if ($title = $this->getChildData($alias, 'title')): ?>
-                    <h2><?php echo $this->escapeHtml($title); ?></h2>
-                <?php endif;?>
-                <?php echo $html; ?>
-            </div>
-        <?php endforeach;?>
-        <?php echo $this->getChildHtml('upsell_products') ?>
-        <?php echo $this->getChildHtml('product_additional_data') ?>
     </div>
 </div>

@@ -3230,8 +3230,8 @@ tr.summary-details-excluded {
 }
 
 .product-collateral {
-    background: #faf7ee url(../images/bkg_product_collateral.gif) 0 0 repeat-x;
-    padding: 25px;
+    /* background: #faf7ee url(../images/bkg_product_collateral.gif) 0 0 repeat-x; */
+    /* padding: 25px; */
 }
 
 .product-collateral h2 {
@@ -3388,7 +3388,6 @@ tr.summary-details-excluded {
 
 .col1-layout .product-view .product-shop {
     float: right;
-    width: 545px;
 }
 
 .col3-layout .product-view .product-shop {
