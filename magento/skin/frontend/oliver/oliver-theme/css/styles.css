@@ -3222,7 +3222,7 @@ tr.summary-details-excluded {
 
 .product-essential {
     padding: 25px;
-    background: #fff url(../images/bkg_product-view.gif) 100% 0 no-repeat;
+    /*background: #fff url(../images/bkg_product-view.gif) 100% 0 no-repeat;*/
 }
 
 .product-essential h2 {
