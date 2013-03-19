@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <campaigns_adminhtml_campaignsbackend_index>
+	<reference name="content">
+	  <block type="campaigns/adminhtml_campaignsbackend" name="campaignsbackend" template="campaigns/campaignsbackend.phtml"/>
+	</reference>
+  </campaigns_adminhtml_campaignsbackend_index>
+</layout>
