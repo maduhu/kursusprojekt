@@ -1,0 +1,8 @@
+<layout version="0.1.0">
+    <default></default>
+    <mymodule_index_index>
+        <reference>
+            <block template="mymodule/brand"/>
+        </reference>
+    </mymodule_index_index>
+</layout>

@@ -1,0 +1,32 @@
+<config>
+    <modules>
+        <Oliver_MyModule>
+            <version>0.1.0</version>
+        </Oliver_MyModule>
+    </modules>
+    <frontend>
+        <routers>
+            <oliver_mymodule>
+                <use>standard</use>
+                <args>
+                    <module>Oliver_MyModule</module>
+                    <frontName>mymodule</frontName>
+                </args>
+            </oliver_mymodule>
+        </routers>
+        <layout>
+            <updates>
+                <oliver_mymodule>
+                    <file>oliver_mymodule.xml</file>
+                </oliver_mymodule>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <blocks>
+            <oliver_mymodule>
+                <class>Oliver_MyModule_Block</class>
+            </oliver_mymodule>
+        </blocks>
+    </global>
+</config>

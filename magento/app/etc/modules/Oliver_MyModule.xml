@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <config>
     <modules>
-        <Oliver_Test>
+        <Oliver_MyModule>
             <active>true</active>
             <codePool>local</codePool>
-        </Oliver_Test>
+        </Oliver_MyModule>
     </modules>
 </config>
