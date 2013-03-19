@@ -261,7 +261,7 @@ ul, ol {
 }
 
 .main-container {
-    /* background: #fbfaf6 url(../images/bkg_main1.gif) 50% 0 no-repeat; */
+    background: #fbfaf6 url(../images/bkg_main1.gif) 50% 0 no-repeat;
 }
 
 .main {
@@ -269,7 +269,7 @@ ul, ol {
     margin: 0 auto;
     min-height: 400px;
     padding: 25px 25px 80px;
-    /* background: #fffffe url(../images/bkg_main2.gif) 0 0 no-repeat; */
+    background: #fffffe url(../images/bkg_main2.gif) 0 0 no-repeat;
     text-align: left;
 }
 
@@ -1580,7 +1580,7 @@ tr.summary-details-excluded {
 .header-container {
     border-top: 5px solid #0d2131;
     border-bottom: 1px solid #415966;
-    /* background: url(../images/bkg_header.jpg) 50% 0 repeat; */
+    background: url(../images/bkg_header.jpg) 50% 0 repeat;
 }
 
 .header {
