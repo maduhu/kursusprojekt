@@ -32,13 +32,16 @@
  */
 ?>
 <?php $_menu = $this->getHtml('level-top') ?>
-<?php if($_menu): ?>
-<div class="nav-container">
-    <ul id="nav">
-        <li>
-           <a href="">Forside</a>
-        </li>
-        <?php echo $_menu ?>
-    </ul>
-</div>
+<?php if ($_menu): ?>
+    <div class="nav-container">
+        <ul id="nav">
+
+            <!-- WORKING ACTIVE STATE HOME BUTTON HACK -->
+            <li class="home<?php if (Mage::helper('core/url')->getCurrentUrl() === Mage::helper('core/url')->getHomeUrl()): ?> active<?php endif; ?>">
+                <a href="<?php echo $this->getUrl('') ?>"><?php echo $this->__('Home') ?></a></li>
+            <!-- WORKING ACTIVE STATE HOME BUTTON HACK -->
+
+            <?php echo $_menu ?>
+        </ul>
+    </div>
 <?php endif ?>
