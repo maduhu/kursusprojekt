@@ -1578,15 +1578,14 @@ tr.summary-details-excluded {
 }
 
 .header-container {
-    border-top: 5px solid #0d2131;
-    border-bottom: 1px solid #415966;
-    background: url(../images/bkg_header.jpg) 50% 0 repeat;
+    border-top: 5px solid #000;
+    border-bottom: 1px solid #000;
+    /*background: url(../images/bkg_header.jpg) 50% 0 repeat;*/
 }
 
 .header {
     width: 930px;
     margin: 0 auto;
-    padding: 10px;
     text-align: right;
     position: relative;
     z-index: 10;
@@ -1594,8 +1593,11 @@ tr.summary-details-excluded {
 
 .header .logo {
     float: left;
-    margin: 3px 0 10px 12px;
     text-decoration: none !important;
+}
+
+.header .logo img {
+    width: 400px;
 }
 
 .header .logo strong {
@@ -1756,7 +1758,8 @@ tr.summary-details-excluded {
 
 /********** < Navigation */
 .nav-container {
-    background: #0a263d url(../images/bkg_nav0.jpg) 50% 0 repeat-y;
+    /* background: #0a263d url(../images/bkg_nav0.jpg) 50% 0 repeat-y; */
+    border-bottom: 1px solid #000;
 }
 
 #nav {
@@ -1795,7 +1798,7 @@ tr.summary-details-excluded {
 }
 
 #nav ul li.parent a {
-    background: url(../images/bkg_nav2.gif) 100% 100% no-repeat;
+    /* background: url(../images/bkg_nav2.gif) 100% 100% no-repeat; */
 }
 
 #nav ul li.parent li a {
@@ -1813,9 +1816,14 @@ tr.summary-details-excluded {
 
 #nav a {
     float: left;
-    padding: 5px 12px 6px 8px;
-    color: #a7c6dd;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    color: #000000;
+    text-transform: uppercase;
     font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 25px;
 }
 
 #nav li.over a,
@@ -1829,7 +1837,7 @@ tr.summary-details-excluded {
     float: none;
     margin: 0;
     padding-bottom: 1px;
-    background: #ecf3f6 url(../images/bkg_nav1.gif) 0 100% repeat-x;
+    /* background: #ecf3f6 url(../images/bkg_nav1.gif) 0 100% repeat-x; */
 }
 
 #nav ul li.last {
