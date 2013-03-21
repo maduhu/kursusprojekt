@@ -58,6 +58,11 @@ Default layout, loads most of the pages
 
                 <action method="addItem"><type>js</type><name>lib/ds-sleight.js</name><params/><if>lt IE 7</if></action>
                 <action method="addItem"><type>skin_js</type><name>js/ie6.js</name><params/><if>lt IE 7</if></action>
+
+                <!-- LIGHTBOX -->
+                <action method="addItem"><type>skin_js</type><name>js/lightbox/lightbox.js</name></action>
+                <action method="addCss"><stylesheet>css/lightbox.css</stylesheet></action>
+                <!-- LIGHTBOX -->
             </block>
 
             <block type="core/text_list" name="after_body_start" as="after_body_start" translate="label">
@@ -133,6 +138,10 @@ Default layout, loads most of the pages
                 <action method="addItem"><type>js</type><name>lib/ds-sleight.js</name><params/><if>lt IE 7</if></action>
                 <action method="addItem"><type>skin_js</type><name>js/ie6.js</name><params/><if>lt IE 7</if></action>
 
+                <!-- LIGHTBOX -->
+                <action method="addItem"><type>skin_js</type><name>js/lightbox/lightbox.js</name></action>
+                <action method="addCss"><stylesheet>css/lightbox.css</stylesheet></action>
+                <!-- LIGHTBOX -->
             </block>
 
             <block type="core/text_list" name="content" as="content" translate="label">

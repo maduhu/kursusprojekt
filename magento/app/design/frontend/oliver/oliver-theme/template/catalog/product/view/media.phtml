@@ -55,16 +55,16 @@ $_helper = $this->helper('catalog/output');
         <ul>
             <?php foreach ($this->getGalleryImages() as $_image): ?>
                 <li>
-                    <a href="#"><img
-                            src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>"
-                            width="56" height="56" alt="<?php echo $this->htmlEscape($_image->getLabel()) ?>"/></a>
+                    <a href="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>" rel="lightbox[rotation]" title="<?php echo $_product->getName();?>">
+                        <img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(68, 68); ?>" width="68" height="68" alt=""/>
+                    </a>
                 </li>
             <?php endforeach; ?>
         </ul>
     </div>
 <?php endif; ?>
 
-<script type="text/javascript">
+<!--<script type="text/javascript">
     jQuery(document).ready(function ($) {
         $('.more-views li img').click(function () {
             var newImage = $(this).clone();
@@ -74,4 +74,4 @@ $_helper = $this->helper('catalog/output');
             $('#image-parent').html(newImage);
         });
     });
-</script>
+</script>-->
