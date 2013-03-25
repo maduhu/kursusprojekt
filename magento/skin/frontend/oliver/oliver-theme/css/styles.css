@@ -1575,10 +1575,11 @@ tr.summary-details-excluded {
 /* Header ================================================================================ */
 .logo {
     float: left;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .header-container {
-    border-top: 5px solid #000;
     border-bottom: 1px solid #000;
     /*background: url(../images/bkg_header.jpg) 50% 0 repeat;*/
 }
@@ -1618,8 +1619,6 @@ tr.summary-details-excluded {
 
 .header .quick-access {
     float: right;
-    width: 600px;
-    padding: 28px 10px 0 0;
 }
 
 .header .welcome-msg {
@@ -1632,14 +1631,16 @@ tr.summary-details-excluded {
     color: #ebbc58;
 }
 
-.header .form-search {
-    position: absolute;
-    top: 0;
-    right: 29px;
-    width: 315px;
+#search {
+    width: 300px;
     height: 30px;
-    background: url(../images/bkg_form-search.gif) 0 0 no-repeat;
-    padding: 1px 0 0 16px;
+}
+
+.header .form-search {
+    position: relative;
+    top: 0;
+    float: right;
+    padding-bottom: 20px;
 }
 
 .header .form-search label {
@@ -1660,6 +1661,7 @@ tr.summary-details-excluded {
 
 .header .form-search button.button {
     float: left;
+    height: 30px;
 }
 
 .header .form-search button.button span {
@@ -1818,7 +1820,7 @@ tr.summary-details-excluded {
     float: left;
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-right: 20px;
+    padding-right: 40px;
     color: #000000;
     text-transform: uppercase;
     font-weight: bold;
