@@ -3,3 +3,4 @@ magento-admin
 magento/var
 .idea/
 magento/media/catalog/product/cache
+*.DS_Store
