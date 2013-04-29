@@ -63,12 +63,11 @@
 
                 <div class="product-collateral">
                     <?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html): ?>
+                        <? if ($alias != "additional") : ?>
                         <div class="box-collateral <?php echo "box-{$alias}" ?>">
-                            <?php if ($title = $this->getChildData($alias, 'title')): ?>
-                                <h2><?php echo $this->escapeHtml($title); ?></h2>
-                            <?php endif;?>
                             <?php echo $html; ?>
                         </div>
+                        <? endif; ?>
                     <?php endforeach;?>
                     <?php echo $this->getChildHtml('upsell_products') ?>
                 </div>
@@ -82,11 +81,11 @@
                     <div class="add-to-box">
                         <?php if ($_product->isSaleable()): ?>
                             <?php echo $this->getChildHtml('addtocart') ?>
-                            <?php if ($this->helper('wishlist')->isAllow() || $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+                            <?php /* if ($this->helper('wishlist')->isAllow() || $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
                                 <span class="or"><?php echo $this->__('OR') ?></span>
-                            <?php endif; ?>
+                            <?php endif; */ ?>
                         <?php endif; ?>
-                        <?php echo $this->getChildHtml('addto') ?>
+                        <?php // echo $this->getChildHtml('addto') ?>
                     </div>
                     <?php echo $this->getChildHtml('extra_buttons') ?>
                 <?php elseif (!$_product->isSaleable()): ?>

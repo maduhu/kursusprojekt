@@ -261,7 +261,7 @@ ul, ol {
 }
 
 .main-container {
-    background: #fbfaf6 url(../images/bkg_main1.gif) 50% 0 no-repeat;
+    /* background: #fbfaf6 url(../images/bkg_main1.gif) 50% 0 no-repeat; */
 }
 
 .main {
@@ -269,7 +269,8 @@ ul, ol {
     margin: 0 auto;
     min-height: 400px;
     padding: 25px 25px 80px;
-    background: #fffffe url(../images/bkg_main2.gif) 0 0 no-repeat;
+    /* background: #fffffe url(../images/bkg_main2.gif) 0 0 no-repeat; */
+    background-color: #FFFFFF;
     text-align: left;
 }
 
@@ -1664,7 +1665,8 @@ tr.summary-details-excluded {
 
 .header .form-search button.button {
     float: left;
-    height: 30px;
+    width: 50px;
+    height: 35px;
 }
 
 .header .form-search button.button span {
@@ -1676,8 +1678,7 @@ tr.summary-details-excluded {
 }
 
 .header .form-search button.button span span {
-    background-position: 100% 0;
-    padding: 0 6px 0 3px;
+    background-position: 100% 0;;
 }
 
 .header .form-search .search-autocomplete {
@@ -2009,7 +2010,7 @@ tr.summary-details-excluded {
 .block-related,
 .block-tags,
 .block-login {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.25;
 }
 
@@ -2228,6 +2229,7 @@ tr.summary-details-excluded {
 
 .block-cart .block-title strong {
     background-image: url(../images/i_block-cart.gif);
+    font-size: 14px;
 }
 
 .block-cart .summary {
@@ -2249,8 +2251,7 @@ tr.summary-details-excluded {
 .block-cart .subtotal {
     margin: 5px 0 0;
     padding: 2px 0;
-    background: #fbebd9;
-    text-align: center;
+    text-align: right;
 }
 
 .block-cart .subtotal .price {
@@ -3237,7 +3238,7 @@ tr.summary-details-excluded {
 }
 
 .product-view {
-    border: 1px solid #c4c6c8;
+    /* border: 1px solid #c4c6c8; */
 }
 
 .product-essential {
@@ -3364,8 +3365,10 @@ tr.summary-details-excluded {
 
 .product-view .product-img-box .more-views li a {
     float: left;
+    /*
     width: 56px;
     height: 56px;
+    */
     border: 2px solid #ddd;
     overflow: hidden;
 }
@@ -3422,6 +3425,7 @@ tr.summary-details-excluded {
 .product-view .product-shop .product-name h1 {
     margin: 0;
     font: bold 15px/1.35 Arial, Helvetica, sans-serif;
+    font-size: 20px;
 }
 
 .product-view .product-shop .availability {
