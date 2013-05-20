@@ -1643,8 +1643,6 @@ tr.summary-details-excluded {
 .header .form-search {
     position: relative;
     top: 0;
-    float: right;
-    padding-bottom: 20px;
 }
 
 .header .form-search label {
@@ -1920,11 +1918,10 @@ tr.summary-details-excluded {
 /* Sidebar =============================================================================== */
 .block {
     border: 1px solid #c4c1bc;
-    margin: 0 0 15px;
 }
 
 .block .block-title {
-    background: url(../images/bkg_block-title.gif) 0 0 repeat-x;
+    /*background: url(../images/bkg_block-title.gif) 0 0 repeat-x;*/
     border-bottom: 1px solid #ddd;
     padding: 2px 9px;
 }
@@ -2027,7 +2024,12 @@ tr.summary-details-excluded {
 .block-login .block-title strong {
     background-position: 0 0;
     background-repeat: no-repeat;
-    padding-left: 21px;
+}
+
+.block-cart {
+    margin-top: 15px;
+    width: 360px;
+    float: right;
 }
 
 /* Mini Products List */
@@ -2223,10 +2225,6 @@ tr.summary-details-excluded {
 }
 
 /* Block: Cart */
-.block-cart .block-title {
-    /*border-bottom:0;*/
-}
-
 .block-cart .block-title strong {
     background-image: url(../images/i_block-cart.gif);
     font-size: 14px;
@@ -2234,10 +2232,8 @@ tr.summary-details-excluded {
 
 .block-cart .summary {
     background: #fff;
-    padding: 2px 8px 8px;
-    margin: -1px 0 0;
-    position: relative;
-    z-index: 1;
+    padding-top: 8px;
+    padding-right: 8px;
 }
 
 .block-cart .amount {
