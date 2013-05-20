@@ -38,11 +38,11 @@
         <h1><?php echo $this->__('Indkøbskurv') ?></h1>
         <?php if(!$this->hasError()): ?>
         <ul class="checkout-types">
-        <?php foreach ($this->getMethods('top_methods') as $method): ?>
+        <?php /* foreach ($this->getMethods('top_methods') as $method): ?>
             <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
             <li><?php echo $methodHtml; ?></li>
             <?php endif; ?>
-        <?php endforeach; ?>
+        <?php endforeach; */ ?>
         </ul>
         <?php endif; ?>
     </div>
@@ -59,7 +59,7 @@
             <?php endif ?>
             <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
                 <col width="1" />
-            <?php endif; ?>s
+            <?php endif; ?>
             <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
                 <col width="1" />
             <?php endif; ?>
@@ -77,12 +77,12 @@
                     <tr>
                         <th rowspan="<?php echo $mergedCells; ?>">&nbsp;</th>
                         <th rowspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo $this->__('Produkter') ?></span></th>
-                        <th rowspan="<?php echo $mergedCells; ?>"></th>
+                        <?/* <th rowspan="<?php echo $mergedCells; ?>"></th>*/?>
                         <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
                         <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><span class="nobr"><?php echo $this->__('Move to Wishlist') ?></span></th>
                         <?php endif ?>
-                        <th class="a-center" colspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo $this->__('Unit Price') ?></span></th>
-                        <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><?php echo $this->__('Qty') ?></th>
+                        <th class="a-center" colspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo $this->__('Enhedspris') ?></span></th>
+                        <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><?php echo $this->__('Antal') ?></th>
                         <th class="a-center" colspan="<?php echo $mergedCells; ?>"><?php echo $this->__('Subtotal') ?></th>
                         <th rowspan="<?php echo $mergedCells; ?>" class="a-center">&nbsp;</th>
                     </tr>
@@ -99,10 +99,10 @@
                     <tr>
                         <td colspan="50" class="a-right">
                             <?php if($this->getContinueShoppingUrl()): ?>
-                                <button type="button" title="<?php echo $this->__('Continue Shopping') ?>" class="button btn-continue" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"><span><span><?php echo $this->__('Shop videre') ?></span></span></button>
+                                <button type="button" class="button btn-continue" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"><span><span><?php echo $this->__('Shop videre') ?></span></span></button>
                             <?php endif; ?>
-                            <button type="submit" name="update_cart_action" value="update_qty" title="<?php echo $this->__('Update Shopping Cart'); ?>" class="button btn-update"><span><span><?php echo $this->__('Opdater indkøbskurv'); ?></span></span></button>
-                            <button type="submit" name="update_cart_action" value="empty_cart" title="<?php echo $this->__('Clear Shopping Cart'); ?>" class="button btn-empty" id="empty_cart_button"><span><span><?php echo $this->__('Ryd indkøbskurv'); ?></span></span></button>
+                            <button type="submit" name="update_cart_action" value="update_qty" class="button btn-update"><span><span><?php echo $this->__('Opdater indkøbskurv'); ?></span></span></button>
+                            <button type="submit" name="update_cart_action" value="empty_cart" class="button btn-empty" id="empty_cart_button"><span><span><?php echo $this->__('Ryd indkøbskurv'); ?></span></span></button>
                             <!--[if lt IE 8]>
                             <input type="hidden" id="update_cart_action_container" />
                             <script type="text/javascript">
