@@ -98,9 +98,9 @@
                 <tfoot>
                     <tr>
                         <td colspan="50" class="a-right">
-                            <?php if($this->getContinueShoppingUrl()): ?>
+                            <?php /* if($this->getContinueShoppingUrl()): ?>
                                 <button type="button" class="button btn-continue" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"><span><span><?php echo $this->__('Shop videre') ?></span></span></button>
-                            <?php endif; ?>
+                            <?php endif; */ ?>
                             <button type="submit" name="update_cart_action" value="update_qty" class="button btn-update"><span><span><?php echo $this->__('Opdater indkøbskurv'); ?></span></span></button>
                             <button type="submit" name="update_cart_action" value="empty_cart" class="button btn-empty" id="empty_cart_button"><span><span><?php echo $this->__('Ryd indkøbskurv'); ?></span></span></button>
                             <!--[if lt IE 8]>
@@ -138,6 +138,16 @@
         </fieldset>
     </form>
     <div class="cart-collaterals">
+
+        <button onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"
+                class="button btn-proceed-checkout btn-checkout" type="button">
+            <span>
+                <span>
+                    <?php echo $this->__('Shop videre') ?>
+                </span>
+            </span>
+        </button>
+
         <div class="col2-set">
             <div class="col-1">
                 <?php echo $this->getChildHtml('crosssell') ?>
