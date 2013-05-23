@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <CheckoutExtended>
+            <version>0.0.1</version>
+        </CheckoutExtended>
+    </modules>
+    <frontend>
+        <routers>
+            <checkout>
+                <args>
+                    <modules>
+                        <CheckoutExtended before="Mage_Checkout">CheckoutExtended</CheckoutExtended>
+                    </modules>
+                </args>
+            </checkout>
+        </routers>
+    </frontend>
+</config>
