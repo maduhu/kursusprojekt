@@ -27,7 +27,7 @@
 /**
  * Shopping cart controller
  */
-class Mage_Checkout_CartController extends Mage_Core_Controller_Front_Action
+class Mage_Checkout_CartController_Extended extends Mage_Core_Controller_Front_Action
 {
     /**
      * Action list where need check enabled cookie
