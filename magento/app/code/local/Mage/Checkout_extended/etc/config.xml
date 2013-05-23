@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <checkout_extended>
+            <version>0.2.0</version>
+        </checkout_extended>
+    </modules>
+    <frontend>
+        <routers>
+            <customer>
+                <args>
+                    <modules>
+                        <checkout_extended before="Mage_Checkout_CartController">
+                            Mage_Checkout_CartController_Extended
+                        </checkout_extended>
+                    </modules>
+                </args>
+            </customer>
+        </routers>
+    </frontend>
+</config>

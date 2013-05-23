@@ -1024,9 +1024,15 @@ p.required {
 /* Pager */
 .pager {
     font-size: 11px;
-    background: #fff url(../images/bkg_toolbar.gif) 0 100% repeat-x;
-    padding: 4px 8px;
+
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-left: 8px;
+    padding-bottom: 8px;
+
     border-top: 1px solid #e2e2e2;
+    border-bottom: 1px solid #e2e2e2;
+
     text-align: center;
 }
 
@@ -1102,7 +1108,6 @@ p.required {
 
 .toolbar .pager {
     padding: 3px 8px;
-    border-bottom: 1px solid #fff;
 }
 
 .toolbar .sorter {
@@ -1583,7 +1588,7 @@ tr.summary-details-excluded {
 /* Header ================================================================================ */
 .logo {
     float: left;
-    margin-top: 50px;
+    margin-top: 20px;
     margin-bottom: 50px;
 }
 
@@ -1606,7 +1611,7 @@ tr.summary-details-excluded {
 }
 
 .header .logo img {
-    width: 400px;
+    width: 300px;
 }
 
 .header .logo strong {
