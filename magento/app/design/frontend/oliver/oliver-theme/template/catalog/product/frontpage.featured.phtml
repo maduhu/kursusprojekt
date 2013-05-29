@@ -83,13 +83,10 @@
     <?php else: ?>
 
         <?php // Grid Mode ?>
-        <div id="left-column">
-            endnu ikke implamenterede filteringspaneler
-        </div>
-        <div id="right-column">
-            <?php echo $this->getToolbarHtml() ?>
+        <div id="featured-products">
+            <h1>Featured products</h1>
             <?php $_collectionSize = $_productCollection->count() ?>
-            <?php // $_columnCount = $this->getColumnCount(); ?>
+            <?php //$_columnCount = $this->getColumnCount(); ?>
             <?php $_columnCount = 4 ?>
             <?php $i=0; foreach ($_productCollection as $_product): ?>
                 <?php if ($i++%$_columnCount==0): ?>
@@ -123,9 +120,6 @@
                 <?php endif ?>
             <?php endforeach ?>
             <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
-            <div class="toolbar-bottom">
-                <?php echo $this->getToolbarHtml() ?>
-            </div>
         </div>
     <?php endif; ?>
 

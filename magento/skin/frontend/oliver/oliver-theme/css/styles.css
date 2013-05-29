@@ -2607,12 +2607,18 @@ tr.summary-details-excluded {
 .category-products {
 }
 
+.category-products #featured-products {
+    float: left;
+}
+
 .category-products #left-column {
     float: left;
+    width: 200px;
 }
 
 .category-products #right-column {
     float: right;
+    width: 700px;
 }
 
 /* View Type: Grid */
