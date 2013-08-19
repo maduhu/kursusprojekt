@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <modules>
-        <CheckoutExtended>
+        <Oliver_Checkout>
             <version>0.0.1</version>
-        </CheckoutExtended>
+        </Oliver_Checkout>
     </modules>
     <frontend>
         <routers>
             <checkout>
+                <use>standard</use>
                 <args>
                     <modules>
-                        <CheckoutExtended before="Mage_Checkout">CheckoutExtended</CheckoutExtended>
+                        <Oliver_Checkout before="Mage_Checkout">Oliver_Checkout</Oliver_Checkout>
                     </modules>
                 </args>
             </checkout>

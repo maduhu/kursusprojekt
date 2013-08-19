@@ -785,7 +785,7 @@ class Mage_Catalog_Block_Product_List_Toolbar extends Mage_Core_Block_Template
 
     public function getTotalNum()
     {
-        return $this->getCollection()->getSize();
+        return count($this->getCollection());
     }
 
     public function isFirstPage()

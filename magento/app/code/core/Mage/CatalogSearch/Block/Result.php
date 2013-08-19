@@ -172,6 +172,27 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
             $this->_productCollection = $this->getListBlock()->getLoadedProductCollection();
         }
 
+        $ids = $this->_productCollection->getAllIds();
+        $searchTerm = $this->helper('catalogsearch')->getQueryText();
+
+        $categories = Mage::getModel('catalog/category')->getCollection()
+            ->addAttributeToFilter('is_active', array('eq' => true))
+            ->addAttributeToFilter('name', array('like' => '%'.$searchTerm.'%'))
+            ->load();
+
+        /**
+         * Should be pretty fast, since we do not select a lot of categories
+         */
+        foreach ($categories as $category) {
+            $products = $category->getProductCollection()
+                ->addAttributeToSelect('*');
+            foreach ($products as $product) {
+                if (!in_array($product->getId(), $ids)) {
+                    $this->_productCollection->addItem($product);
+                }
+            }
+        }
+
         return $this->_productCollection;
     }
 
