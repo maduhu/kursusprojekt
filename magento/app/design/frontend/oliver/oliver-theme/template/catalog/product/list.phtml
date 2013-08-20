@@ -32,72 +32,101 @@
  */
 ?>
 <?php
-    $_productCollection=$this->getLoadedProductCollection();
+    $_productCollection = $this->getLoadedProductCollection();
     $_helper = $this->helper('catalog/output');
 ?>
 <?php if(!$_productCollection->count()): ?>
 <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
 <?php else: ?>
-<div class="category-products">
-    <?php // List mode ?>
-    <?php if($this->getMode()!='grid'): ?>
-    <?php $_iterator = 0; ?>
-    <ol class="products-list" id="products-list">
-    <?php foreach ($_productCollection as $_product): ?>
-        <li class="item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
-            <?php // Product Image ?>
-            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(135); ?>" width="135" height="135" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
-            <?php // Product description ?>
-            <div class="product-shop">
-                <div class="f-fix">
-                    <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
-                    <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName() , 'name'); ?></a></h2>
-                    <?php if($_product->getRatingSummary()): ?>
-                    <?php echo $this->getReviewsSummaryHtml($_product) ?>
-                    <?php endif; ?>
-                    <?php echo $this->getPriceHtml($_product, true) ?>
-                    <?php if($_product->isSaleable()): ?>
-                        <p><button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button></p>
-                    <?php else: ?>
-                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
-                    <?php endif; ?>
-                    <div class="desc std">
-                        <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>
-                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a>
-                    </div>
-                    <ul class="add-to-links">
-                        <?php if ($this->helper('wishlist')->isAllow()) : ?>
-                            <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
-                        <?php endif; ?>
-                        <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
-                            <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
-        </li>
-    <?php endforeach; ?>
-    </ol>
-    <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
-
-    <?php else: ?>
-
+    <div class="category-products">
         <?php // Grid Mode ?>
         <div id="left-column">
-            endnu ikke implamenterede filteringspaneler
+            <h2>
+                Smykker
+            </h2>
+            <?
+                $currentUrl = $this->helper('core/url')->getCurrentUrl();
+                $currentMaterial = $this->getRequest()->getParam('material');
+
+                if (isset($currentMaterial)) {
+                    $_productCollection = $this->getProductsByMaterial($currentMaterial);
+                }
+
+                $jew_categories = Mage::getModel('catalog/category')->getCollection()
+                ->addAttributeToFilter('is_active', array('eq' => true))
+                ->addAttributeToFilter('parent_id', array('eq' => 4)) // the id of category "Produkter"
+                ->addAttributeToSort('name', 'ASC')
+                ->load();
+
+                $brand_categories = Mage::getModel('catalog/category')->getCollection()
+                ->addAttributeToFilter('is_active', array('eq' => true))
+                ->addAttributeToFilter('parent_id', array('eq' => 5)) // the id of category "Mærker"
+                ->addAttributeToSort('name', 'ASC')
+                ->load();
+
+                $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'materiale');
+                $materials = array();
+                if ($attribute->usesSource()) {
+                    $options = $attribute->getSource()->getAllOptions(false); // get material options
+                    foreach ($options as $option) {
+                        $materials[] = $option['label'];
+                    }
+                    sort($materials);
+                }
+
+                /** @var $category Mage_Catalog_Model_Category */
+                foreach ($jew_categories as $category) :?>
+                <a href="<? echo $category->getUrl() ?>" class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>">
+                    <? echo $category->getName() ?><br/>
+                </a>
+            <? endforeach; ?>
+            <h2>
+                Mærker
+            </h2>
+            <?
+                /** @var $category Mage_Catalog_Model_Category */
+                foreach ($brand_categories as $category) :?>
+                <a href="<? echo $category->getUrl() ?>" class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>">
+                    <? echo $category->getName() ?><br/>
+                </a>
+            <? endforeach; ?>
+            <h2>
+                Materiale
+            </h2>
+            <?
+            foreach ($materials as $material) :?>
+                <a href="<? echo $currentUrl . "?material=".$material; ?>">
+                    <? echo $material; ?><br/>
+                </a>
+            <? endforeach; ?>
         </div>
         <div id="right-column">
             <?php echo $this->getToolbarHtml() ?>
             <?php $_collectionSize = $_productCollection->count() ?>
             <?php // $_columnCount = $this->getColumnCount(); ?>
             <?php $_columnCount = 4 ?>
+            <? /** @var Mage_Catalog_Model_Product $_product */ ?>
             <?php $i=0; foreach ($_productCollection as $_product): ?>
                 <?php if ($i++%$_columnCount==0): ?>
                     <ul class="products-grid">
                     <?php endif ?>
                         <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
                             <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(135); ?>" width="135" height="135" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
-                            <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+                            <h2 class="product-name">
+                                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+                                    <?php
+                                        print_r($_product->getAttributeText('materiale'));
+                                        echo "<br>";
+                                        $name = $_product->getName();
+                                        $len = strlen($name);
+                                        $maxlen = 40;
+                                        if ($len > $maxlen) {
+                                            $name = substr($name, 0, $maxlen) . "...";
+                                        }
+                                        echo $name;
+                                    ?>
+                                </a>
+                            </h2>
                             <?php if($_product->getRatingSummary()): ?>
                                 <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
                             <?php endif; ?>
@@ -127,7 +156,4 @@
                 <?php echo $this->getToolbarHtml() ?>
             </div>
         </div>
-    <?php endif; ?>
-
-</div>
 <?php endif; ?>

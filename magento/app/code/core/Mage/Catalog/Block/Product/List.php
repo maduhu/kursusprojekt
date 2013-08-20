@@ -32,8 +32,7 @@
  * @package    Mage_Catalog
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstract
-{
+class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstract {
     /**
      * Default toolbar block name
      *
@@ -53,8 +52,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      *
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    protected function _getProductCollection()
-    {
+    protected function _getProductCollection() {
         if (is_null($this->_productCollection)) {
             $layer = $this->getLayer();
             /* @var $layer Mage_Catalog_Model_Layer */
@@ -92,6 +90,19 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
             }
         }
 
+        /*
+        $this->_productCollection
+            ->addAttributeToFilter('materiale', array('like' => '%guld%'))
+            ->load();
+        */
+
+        return $this->_productCollection;
+    }
+
+    public function getProductsByMaterial($material) {
+        $this->_productCollection
+            ->addAttributeToFilter('materiale', array('like' => '%' . $material . '%'))
+            ->load();
         return $this->_productCollection;
     }
 
@@ -100,8 +111,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      *
      * @return Mage_Catalog_Model_Layer
      */
-    public function getLayer()
-    {
+    public function getLayer() {
         $layer = Mage::registry('current_layer');
         if ($layer) {
             return $layer;
@@ -114,8 +124,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      *
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    public function getLoadedProductCollection()
-    {
+    public function getLoadedProductCollection() {
         return $this->_getProductCollection();
     }
 
@@ -124,8 +133,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      *
      * @return string
      */
-    public function getMode()
-    {
+    public function getMode() {
         return $this->getChild('toolbar')->getCurrentMode();
     }
 
@@ -133,8 +141,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      * Need use as _prepareLayout - but problem in declaring collection from
      * another block (was problem with search result)
      */
-    protected function _beforeToHtml()
-    {
+    protected function _beforeToHtml() {
         $toolbar = $this->getToolbarBlock();
 
         // called prepare sortable parameters
@@ -159,8 +166,8 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
 
         $this->setChild('toolbar', $toolbar);
         Mage::dispatchEvent('catalog_block_product_list_collection', array(
-            'collection' => $this->_getProductCollection()
-        ));
+                                                                          'collection' => $this->_getProductCollection()
+                                                                     ));
 
         $this->_getProductCollection()->load();
 
@@ -172,8 +179,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      *
      * @return Mage_Catalog_Block_Product_List_Toolbar
      */
-    public function getToolbarBlock()
-    {
+    public function getToolbarBlock() {
         if ($blockName = $this->getToolbarBlockName()) {
             if ($block = $this->getLayout()->getBlock($blockName)) {
                 return $block;
@@ -188,8 +194,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      *
      * @return string
      */
-    public function getAdditionalHtml()
-    {
+    public function getAdditionalHtml() {
         return $this->getChildHtml('additional');
     }
 
@@ -198,25 +203,21 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      *
      * @return string
      */
-    public function getToolbarHtml()
-    {
+    public function getToolbarHtml() {
         return $this->getChildHtml('toolbar');
     }
 
-    public function setCollection($collection)
-    {
+    public function setCollection($collection) {
         $this->_productCollection = $collection;
         return $this;
     }
 
-    public function addAttribute($code)
-    {
+    public function addAttribute($code) {
         $this->_getProductCollection()->addAttributeToSelect($code);
         return $this;
     }
 
-    public function getPriceBlockTemplate()
-    {
+    public function getPriceBlockTemplate() {
         return $this->_getData('price_block_template');
     }
 
@@ -225,8 +226,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      *
      * @return Mage_Catalog_Model_Config
      */
-    protected function _getConfig()
-    {
+    protected function _getConfig() {
         return Mage::getSingleton('catalog/config');
     }
 

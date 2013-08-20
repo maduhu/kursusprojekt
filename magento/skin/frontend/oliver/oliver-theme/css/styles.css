@@ -457,13 +457,13 @@ button.button {
 button.button span {
     display: block;
     height: 19px;
-    border: 1px solid #de5400;
-    background: #f18200;
+    border: 1px solid #b9bede;
+    background: #A1B6E2;
     padding: 0 8px;
     font: bold 12px/19px Arial, Helvetica, sans-serif;
     text-align: center;
     white-space: nowrap;
-    color: #fff;
+    color: #ffffff;
 }
 
 button.button span span {
@@ -1824,7 +1824,7 @@ tr.summary-details-excluded {
 }
 
 #nav li.active a {
-    color: #d96708;
+    color: #A1B6E2;
 }
 
 #nav a {
@@ -1941,7 +1941,7 @@ tr.summary-details-excluded {
     min-height: 16px;
     padding: 1px 0 1px;
     text-transform: uppercase;
-    color: #e26703;
+    color: #A1B6E2;
 }
 
 .block .block-title strong span {
@@ -2621,21 +2621,36 @@ tr.summary-details-excluded {
     width: 700px;
 }
 
+.category-products #left-column a {
+    color: 618499;
+    text-decoration: none;
+}
+
+.category-products #left-column a.active {
+    color: #000;
+    padding-left: 10px;
+}
+
 /* View Type: Grid */
 .products-grid {
-    border-bottom: 1px solid #d9ddd3;
+    /*border-bottom: 1px solid #d9ddd3;*/
+    padding-top: 15px;
     /*background: url(../images/bkg_grid.gif) 0 0 repeat;*/
     position: relative;
 }
 
 .products-grid.last {
-    border-bottom: 0;
+    border-bottom: 0px;
+    padding-bottom: 25px;
 }
 
 .products-grid li.item {
     float: left;
     width: 138px;
-    padding: 12px 10px 80px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-right: 25px;
+    padding-left: 10px;
 }
 
 .products-grid .product-image {
@@ -2647,10 +2662,12 @@ tr.summary-details-excluded {
 
 .products-grid .product-name {
     /*min-height:2.7em;*/
+    /*
     margin: 0 0 5px;
     font-weight: bold;
     font-size: 13px;
     color: #203548;
+    */
 }
 
 .products-grid .product-name a {
@@ -2916,18 +2933,18 @@ tr.summary-details-excluded {
 
 .price-box .price {
     font-weight: bold;
-    color: #c76200;
+    color: #000000;
 }
 
 /* Regular price */
 .regular-price {
-    color: #c76200;
+    color: #000000;
 }
 
 .regular-price .price {
     font-weight: bold;
     font-size: 13px;
-    color: #c76200;
+    color: #000000;
 }
 
 .block .regular-price,
@@ -3911,6 +3928,7 @@ tr.summary-details-excluded {
 
 .product-name a {
     color: #1e7ec8;
+    text-decoration: none;
 }
 
 /* Product Tags */
@@ -6009,7 +6027,7 @@ tr.summary-details-excluded {
 
 /* Footer ================================================================================ */
 .footer-container {
-    border-top: 15px solid #b6d1e2;
+    border-top: 15px solid #a1b6e2;
 }
 
 .footer {
@@ -6035,7 +6053,6 @@ tr.summary-details-excluded {
 }
 
 .footer a {
-    color: #fff;
     text-decoration: none;
 }
 
@@ -6045,11 +6062,9 @@ tr.summary-details-excluded {
 
 .footer .bugs {
     margin: 13px 0 0;
-    color: #ecf3f6;
 }
 
 .footer .bugs a {
-    color: #ecf3f6;
     text-decoration: underline;
 }
 
@@ -6057,13 +6072,11 @@ tr.summary-details-excluded {
     text-decoration: none;
 }
 
-.footer address {
-    margin: 0 0 20px;
-    color: #ecf3f6;
+.footer address {;
+    margin: 0 0 20px
 }
 
 .footer address a {
-    color: #ecf3f6;
     text-decoration: underline;
 }
 

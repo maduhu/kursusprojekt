@@ -32,8 +32,7 @@
  * @package    Mage_CatalogSearch
  * @module     Catalog
  */
-class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
-{
+class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template {
     /**
      * Catalog Product collection
      *
@@ -46,8 +45,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return Mage_CatalogSearch_Model_Query
      */
-    protected function _getQuery()
-    {
+    protected function _getQuery() {
         return $this->helper('catalogsearch')->getQuery();
     }
 
@@ -56,21 +54,20 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return Mage_CatalogSearch_Block_Result
      */
-    protected function _prepareLayout()
-    {
+    protected function _prepareLayout() {
         // add Home breadcrumb
         $breadcrumbs = $this->getLayout()->getBlock('breadcrumbs');
         if ($breadcrumbs) {
             $title = $this->__("Search results for: '%s'", $this->helper('catalogsearch')->getQueryText());
 
             $breadcrumbs->addCrumb('home', array(
-                'label' => $this->__('Home'),
-                'title' => $this->__('Go to Home Page'),
-                'link'  => Mage::getBaseUrl()
-            ))->addCrumb('search', array(
-                'label' => $title,
-                'title' => $title
-            ));
+                                                'label' => $this->__('Home'),
+                                                'title' => $this->__('Go to Home Page'),
+                                                'link' => Mage::getBaseUrl()
+                                           ))->addCrumb('search', array(
+                                                                       'label' => $title,
+                                                                       'title' => $title
+                                                                  ));
         }
 
         // modify page title
@@ -85,8 +82,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return string
      */
-    public function getAdditionalHtml()
-    {
+    public function getAdditionalHtml() {
         return $this->getLayout()->getBlock('search_result_list')->getChildHtml('additional');
     }
 
@@ -95,8 +91,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return Mage_Catalog_Block_Product_List
      */
-    public function getListBlock()
-    {
+    public function getListBlock() {
         return $this->getChild('search_result_list');
     }
 
@@ -105,16 +100,15 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return Mage_CatalogSearch_Block_Result
      */
-    public function setListOrders()
-    {
+    public function setListOrders() {
         $category = Mage::getSingleton('catalog/layer')
             ->getCurrentCategory();
         /* @var $category Mage_Catalog_Model_Category */
         $availableOrders = $category->getAvailableSortByOptions();
         unset($availableOrders['position']);
         $availableOrders = array_merge(array(
-            'relevance' => $this->__('Relevance')
-        ), $availableOrders);
+                                            'relevance' => $this->__('Relevance')
+                                       ), $availableOrders);
 
         $this->getListBlock()
             ->setAvailableOrders($availableOrders)
@@ -129,12 +123,11 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return Mage_CatalogSearch_Block_Result
      */
-    public function setListModes()
-    {
+    public function setListModes() {
         $this->getListBlock()
             ->setModes(array(
-                'grid' => $this->__('Grid'),
-                'list' => $this->__('List'))
+                            'grid' => $this->__('Grid'),
+                            'list' => $this->__('List'))
             );
         return $this;
     }
@@ -144,11 +137,10 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return Mage_CatalogSearch_Block_Result
      */
-    public function setListCollection()
-    {
+    public function setListCollection() {
 //        $this->getListBlock()
 //           ->setCollection($this->_getProductCollection());
-       return $this;
+        return $this;
     }
 
     /**
@@ -156,8 +148,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return string
      */
-    public function getProductListHtml()
-    {
+    public function getProductListHtml() {
         return $this->getChildHtml('search_result_list');
     }
 
@@ -166,8 +157,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return Mage_CatalogSearch_Model_Resource_Fulltext_Collection
      */
-    protected function _getProductCollection()
-    {
+    protected function _getProductCollection() {
         if (is_null($this->_productCollection)) {
             $this->_productCollection = $this->getListBlock()->getLoadedProductCollection();
         }
@@ -177,15 +167,14 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
 
         $categories = Mage::getModel('catalog/category')->getCollection()
             ->addAttributeToFilter('is_active', array('eq' => true))
-            ->addAttributeToFilter('name', array('like' => '%'.$searchTerm.'%'))
+            ->addAttributeToFilter('name', array('like' => '%' . $searchTerm . '%'))
             ->load();
 
         /**
          * Should be pretty fast, since we do not select a lot of categories
          */
         foreach ($categories as $category) {
-            $products = $category->getProductCollection()
-                ->addAttributeToSelect('*');
+            $products = $category->getProductCollection()->addAttributeToSelect('*');
             foreach ($products as $product) {
                 if (!in_array($product->getId(), $ids)) {
                     $this->_productCollection->addItem($product);
@@ -201,8 +190,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return string
      */
-    public function getResultCount()
-    {
+    public function getResultCount() {
         if (!$this->getData('result_count')) {
             $size = $this->_getProductCollection()->getSize();
             $this->_getQuery()->setNumResults($size);
@@ -216,8 +204,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return string
      */
-    public function getNoResultText()
-    {
+    public function getNoResultText() {
         if (Mage::helper('catalogsearch')->isMinQueryLength()) {
             return Mage::helper('catalogsearch')->__('Minimum Search query length is %s', $this->_getQuery()->getMinQueryLength());
         }
@@ -229,8 +216,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template
      *
      * @return array
      */
-    public function getNoteMessages()
-    {
+    public function getNoteMessages() {
         return Mage::helper('catalogsearch')->getNoteMessages();
     }
 }
