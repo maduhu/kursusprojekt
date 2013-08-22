@@ -50,12 +50,13 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
     /**
      * Retrieve loaded category collection
      *
+     * @param $material
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    protected function _getProductCollection() {
+    protected function _getProductCollection($material = null) {
         if (is_null($this->_productCollection)) {
-            $layer = $this->getLayer();
             /* @var $layer Mage_Catalog_Model_Layer */
+            $layer = $this->getLayer();
             if ($this->getShowRootCategory()) {
                 $this->setCategoryId(Mage::app()->getStore()->getRootCategoryId());
             }
@@ -90,19 +91,11 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
             }
         }
 
-        /*
-        $this->_productCollection
-            ->addAttributeToFilter('materiale', array('like' => '%guld%'))
-            ->load();
-        */
+        if ($material != null) {
+            $this->_productCollection
+                ->addAttributeToFilter('materiale', array('eq' => (int) $material));
+        }
 
-        return $this->_productCollection;
-    }
-
-    public function getProductsByMaterial($material) {
-        $this->_productCollection
-            ->addAttributeToFilter('materiale', array('like' => '%' . $material . '%'))
-            ->load();
         return $this->_productCollection;
     }
 
@@ -142,10 +135,13 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      * another block (was problem with search result)
      */
     protected function _beforeToHtml() {
+
+        $material = urldecode($this->getRequest()->getParam('material'));
+
         $toolbar = $this->getToolbarBlock();
 
         // called prepare sortable parameters
-        $collection = $this->_getProductCollection();
+        $collection = $this->_getProductCollection($material);
 
         // use sortable parameters
         if ($orders = $this->getAvailableOrders()) {
@@ -165,11 +161,12 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
         $toolbar->setCollection($collection);
 
         $this->setChild('toolbar', $toolbar);
-        Mage::dispatchEvent('catalog_block_product_list_collection', array(
-                                                                          'collection' => $this->_getProductCollection()
-                                                                     ));
+        Mage::dispatchEvent(
+            'catalog_block_product_list_collection',
+            array('collection' => $this->_getProductCollection($material))
+        );
 
-        $this->_getProductCollection()->load();
+        $this->_getProductCollection($material)->load();
 
         return parent::_beforeToHtml();
     }

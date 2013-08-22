@@ -2613,16 +2613,16 @@ tr.summary-details-excluded {
 
 .category-products #left-column {
     float: left;
-    width: 200px;
+    width: 150px;
 }
 
 .category-products #right-column {
-    float: right;
+    float: left;
     width: 700px;
 }
 
 .category-products #left-column a {
-    color: 618499;
+    color: #618499;
     text-decoration: none;
 }
 
