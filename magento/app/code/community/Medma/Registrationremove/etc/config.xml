@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Medma_Registrationremove>
+			<version>0.1.0</version>
+		</Medma_Registrationremove>
+	</modules>
+	<global>
+		<rewrite>
+			<medma_registrationremove_account_create>
+				<from><![CDATA[#^/customer/account/create#]]></from>
+				<to>/registrationremove/account/create</to>
+			</medma_registrationremove_account_create>
+			<medma_registrationremove_account_createPost>
+				<from><![CDATA[#^/customer/account/create/#]]></from>
+				<to>/registrationremove/account/create</to>
+			</medma_registrationremove_account_createPost>
+		</rewrite>
+	</global>
+	
+
+	<frontend>
+		<routers>
+			<registrationremove>
+				<use>standard</use>
+				<args>
+					<module>Medma_Registrationremove</module>
+					<frontName>registrationremove</frontName>
+				</args>
+			</registrationremove>
+		</routers>
+        <layout>
+            <updates>
+                <registrationremove>
+                    <file>registrationremove.xml</file>
+                </registrationremove>
+            </updates>
+        </layout>
+	</frontend>
+    <adminhtml>
+		<acl>
+		    <resources>
+		        <admin>
+		            <children>
+		                <system>
+		                    <children>
+		                        <config>
+		                            <children>
+		                                <disableregistration>
+		                                    <title>Disable Customer Registration</title>
+		                                    <sort_order>60</sort_order>
+		                                </disableregistration>
+		                            </children>
+		                        </config>
+		                    </children>
+		                </system>
+		            </children>
+		        </admin>
+		    </resources>
+		</acl>
+    </adminhtml>
+
+</config>

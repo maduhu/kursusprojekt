@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<config>
+    <tabs>
+        <registrationremove translate="label">
+            <label>Customer Registration</label>
+            <sort_order>100</sort_order>
+        </registrationremove>
+    </tabs>
+  <sections>
+    <disableregistration translate="label">
+        <label>Admin Control</label>
+        <tab>registrationremove</tab>
+        <frontend_type>text</frontend_type>
+         <sort_order>1000</sort_order>
+        <show_in_default>1</show_in_default>
+        <show_in_website>1</show_in_website>
+        <show_in_store>1</show_in_store>
+            <groups>
+                 <!-- New groups go here -->
+                    <isEnable translate="label">
+                    <label>Disable Registration(s)</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                                    <fields>
+                        <!-- New fields go here -->
+                            <ENABLED translate="label comment">
+	                            <label>Customer Registration</label>
+	                            <comment><![CDATA[<span class="notice">Enable/Disable Customer Registration.</span>]]></comment>
+	                            <frontend_type>select</frontend_type>
+	                            <source_model>adminhtml/system_config_source_yesno</source_model>
+	                            <sort_order>10</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>1</show_in_store>
+                            </ENABLED>
+                            <checkoutregistration translate="label comment">
+	                            <label>Checkout Customer Registration</label>
+	                            <comment><![CDATA[<span class="notice">Enable/Disable Customer Registration on Checkout Page.</span>]]></comment>
+	                            <frontend_type>select</frontend_type>
+	                            <source_model>adminhtml/system_config_source_yesno</source_model>
+	                            <sort_order>20</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>1</show_in_store>
+                            </checkoutregistration>
+
+                        </fields>
+            </isEnable>
+            </groups>
+    </disableregistration>
+  </sections>
+</config>
