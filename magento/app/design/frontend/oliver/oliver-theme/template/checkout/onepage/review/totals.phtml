@@ -23,23 +23,25 @@
  * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-/* @var $this Mage_Reports_Block_Product_Viewed */
-/*
+
+/**
+ * @see Mage_Checkout_Block_Cart_Totals
+ */
 ?>
-<?php if ($_products = $this->getRecentlyViewedProducts()): ?>
-<div class="block block-list block-viewed">
-    <div class="block-title">
-        <strong><span><?php echo $this->__('Recently Viewed Products') ?></span></strong>
-    </div>
-    <div class="block-content">
-        <ol id="recently-viewed-items">
-        <?php foreach ($_products as $_item): ?>
-            <li class="item">
-                <p class="product-name"><a href="<?php echo $this->getProductUrl($_item) ?>"><?php echo $this->helper('catalog/output')->productAttribute($_item, $_item->getName() , 'name') ?></a></p>
-            </li>
-        <?php endforeach; ?>
-        </ol>
-        <script type="text/javascript">decorateList('recently-viewed-items');</script>
-    </div>
-</div>
+<?php if ($this->getTotals()): ?>
+<tfoot>
+    <?php $_colspan = $this->helper('tax')->displayCartBothPrices() ? 5 : 3; ?>
+    <?php echo $this->renderTotals(null, $_colspan); ?>
+    <?php echo $this->renderTotals('footer', $_colspan); ?>
+    <?php if ($this->needDisplayBaseGrandtotal()):?>
+    <tr>
+        <td class="a-right" colspan="<?php echo $_colspan; ?>">
+            <small><?php echo $this->helper('sales')->__('Your credit card will be charged for') ?></small>
+        </td>
+        <td class="a-right">
+            <small><?php echo $this->displayBaseGrandtotal() ?></small>
+        </td>
+    </tr>
+    <?php endif?>
+</tfoot>
 <?php endif; ?>

@@ -1588,8 +1588,8 @@ tr.summary-details-excluded {
 /* Header ================================================================================ */
 .logo {
     float: left;
-    margin-top: 20px;
-    margin-bottom: 50px;
+    margin-top: 10px;
+    margin-bottom: 35px;
 }
 
 .header-container {
@@ -1611,7 +1611,7 @@ tr.summary-details-excluded {
 }
 
 .header .logo img {
-    width: 300px;
+    width: 260px;
 }
 
 .header .logo strong {
@@ -1652,6 +1652,7 @@ tr.summary-details-excluded {
 .header .form-search {
     position: relative;
     top: 0;
+    margin-top: 10px;
 }
 
 .header .form-search label {
@@ -1676,16 +1677,12 @@ tr.summary-details-excluded {
     height: 35px;
 }
 
-.header .form-search button.button span {
-    border: 0;
-    height: 21px;
-    background: url(../images/btn_search.gif) 0 0 no-repeat;
-    padding: 0 0 0 3px;
-    font: bold 11px/21px Tahoma, Verdana, Arial, sans-serif;
-}
-
-.header .form-search button.button span span {
-    background-position: 100% 0;;
+.header .form-search button.button div {
+    border: 1px solid #B9BEDE;
+    padding: 9px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #A1B6E2;
 }
 
 .header .form-search .search-autocomplete {
@@ -3299,7 +3296,7 @@ tr.summary-details-excluded {
 /* Product Images */
 .product-view .product-img-box {
     float: left;
-    width: 267px;
+    /*width: 267px;*/
 }
 
 .col3-layout .product-view .product-img-box {

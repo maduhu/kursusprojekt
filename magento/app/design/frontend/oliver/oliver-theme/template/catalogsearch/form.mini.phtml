@@ -38,11 +38,9 @@ $catalogSearchHelper = $this->helper('catalogsearch');
                maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength(); ?>"
         />
         <button type="submit" title="<?php echo $this->__('Søg på navne, mærker eller materialer') ?>" class="button">
-            <span>
-                <span>
-                    Søg
-                </span>
-            </span>
+            <div>
+                Søg
+            </div>
         </button>
         <div id="search_autocomplete" class="search-autocomplete"></div>
         <script type="text/javascript">

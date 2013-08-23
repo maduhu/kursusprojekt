@@ -1,4 +1,6 @@
 <?php
+    /** @var $this Mage_Catalog_Block_Product_View_Media  */
+
     $_product = $this->getProduct();
     $_helper = $this->helper('catalog/output');
     
@@ -26,7 +28,8 @@
     if ($popupImageSize[0] > 0) {
         $image = $this->helper('catalog/image')->init($_product, 'image')->resize($popupImageSize[0], $popupImageSize[1]);
     }
-       
+
+    $images = $this->getGalleryImages();
 ?>
 
 <?php if(!$_lightboxConfig['defaulzoom']): ?>
@@ -38,8 +41,7 @@
 	endif;
 ?>
 
-<a href="<?php echo $image; ?>" 
-    rel="lightbox[rotation]" 
+<a href="<?php echo $image; ?>"
     title="<?php echo $maintitle ;?>"
     onclick="return false;"
 ><img src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize($mainImageSize[0], $mainImageSize[1]); ?>" alt="<?php echo $this->htmlEscape($_product->getImageLabel());?>"
@@ -71,11 +73,11 @@
 
 <?php endif; ?>
 
-<?php if (count($this->getGalleryImages()) > 0): ?>
+<?php if (count($images) > 0): ?>
 <div class="more-views">
     <h4><?php echo $this->__('More Views') ?></h4>
     <ul>
-    <?php foreach ($this->getGalleryImages() as $_image): ?>
+    <?php foreach ($images as $_image): ?>
 	<?php
 	$subtitle = $this->htmlEscape($_image->getLabel());
 	if(($_lightboxConfig['productName'] != 0) && empty($subtitle)):
@@ -86,8 +88,9 @@
         <a href="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile())->resize($popupImageSize[0], $popupImageSize[1]); ?>" 
             rel="lightbox[rotation]" 
             title="<?php echo $subtitle; ?>"
-            onclick="return false;"
-        ><img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize($additionalImageSize[0], $additionalImageSize[1]); ?>" alt="<?php echo $subtitle; ?>"
+            onclick="return false;">
+            <img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize($additionalImageSize[0], $additionalImageSize[1]); ?>"
+                 alt="<?php echo $subtitle; ?>"
         /></a>
     </li>
     <?php endforeach; ?>
