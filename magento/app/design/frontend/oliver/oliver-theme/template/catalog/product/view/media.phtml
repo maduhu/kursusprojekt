@@ -55,7 +55,7 @@ $_helper = $this->helper('catalog/output');
         <ul>
             <?php foreach ($this->getGalleryImages() as $_image): ?>
                 <li>
-                    <a href="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>" rel="lightbox[rotation]" title="<?php echo $_product->getName();?>">
+                    <a href="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>" title="<?php echo $_product->getName();?>">
                         <img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(68, 68); ?>" width="68" height="68" alt=""/>
                     </a>
                 </li>
