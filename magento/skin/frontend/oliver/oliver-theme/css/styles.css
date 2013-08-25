@@ -458,7 +458,7 @@ button.button span {
     display: block;
     height: 19px;
     border: 1px solid #b9bede;
-    background: #A1B6E2;
+    background: #F38630;
     padding: 0 8px;
     font: bold 12px/19px Arial, Helvetica, sans-serif;
     text-align: center;
@@ -1682,7 +1682,7 @@ tr.summary-details-excluded {
     padding: 9px;
     color: #fff;
     font-weight: bold;
-    background-color: #A1B6E2;
+    background-color: #F38630;
 }
 
 .header .form-search .search-autocomplete {
@@ -1821,7 +1821,7 @@ tr.summary-details-excluded {
 }
 
 #nav li.active a {
-    color: #A1B6E2;
+    color: #F38630;
 }
 
 #nav a {
@@ -1938,7 +1938,7 @@ tr.summary-details-excluded {
     min-height: 16px;
     padding: 1px 0 1px;
     text-transform: uppercase;
-    color: #A1B6E2;
+    color: #F38630;
 }
 
 .block .block-title strong span {
@@ -2644,17 +2644,19 @@ tr.summary-details-excluded {
 .products-grid li.item {
     float: left;
     width: 138px;
-    padding-top: 25px;
-    padding-bottom: 25px;
-    padding-right: 25px;
-    padding-left: 10px;
+    padding: 25px 25px 25px 10px;
 }
 
 .products-grid .product-image {
     display: block;
-    width: 135px;
-    height: 135px;
+    width: 165px;
+    height: 165px;
     margin: 0 0 10px;
+}
+
+.products-grid .product-image img {
+    padding: 8px;
+    border: 1px solid #E2E2E2;
 }
 
 .products-grid .product-name {
@@ -6024,7 +6026,7 @@ tr.summary-details-excluded {
 
 /* Footer ================================================================================ */
 .footer-container {
-    border-top: 15px solid #a1b6e2;
+    border-top: 15px solid #F38630;
 }
 
 .footer {
