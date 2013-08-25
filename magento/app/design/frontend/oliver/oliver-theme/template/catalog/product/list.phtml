@@ -23,8 +23,7 @@
  * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-?>
-<?php
+
 /**
  * Product list template
  *
@@ -41,7 +40,7 @@
     $params = "?material=". $currentMaterial . "&order=" . $order;
 
     preg_match_all("@\/([\w\d-]+)[^$]@", $currentUrl, $page);
-    $baseUrl = $this->getBaseUrl() . $page[1][1] . $params;
+    $baseUrl = $this->getBaseUrl() . "produkter" . $params;
 
     $_productCollection = $this->getLoadedProductCollection();
 

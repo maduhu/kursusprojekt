@@ -93,7 +93,7 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
 
         if ($material != null) {
             $this->_productCollection
-                ->addAttributeToFilter('materiale', array('eq' => (int) $material));
+                ->addAttributeToFilter('materiale', array('eq' => (int)$material));
         }
 
         return $this->_productCollection;

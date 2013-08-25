@@ -2628,12 +2628,34 @@ tr.summary-details-excluded {
     padding-left: 10px;
 }
 
+/* Brand view Grid */
+.brand-images {
+
+}
+
+.brand-image {
+    float: left;
+    padding: 5px;
+}
+
+.brand-image div {
+    border: 1px solid #000000;
+}
+
+.brand-image img {
+    padding: 10px;
+}
+
 /* View Type: Grid */
 .products-grid {
     /*border-bottom: 1px solid #d9ddd3;*/
     padding-top: 15px;
     /*background: url(../images/bkg_grid.gif) 0 0 repeat;*/
     position: relative;
+}
+
+.products-grid.first {
+    padding-top: 0px;
 }
 
 .products-grid.last {

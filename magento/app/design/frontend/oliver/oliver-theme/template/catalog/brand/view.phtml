@@ -1,0 +1,31 @@
+<?php
+/**
+ * Product list template
+ *
+ * @var Mage_Catalog_Block_Product_List $this
+ */
+
+$brand_categories = Mage::getModel('catalog/category')->getCollection()
+    ->addAttributeToSelect('image')
+    ->addAttributeToFilter('is_active', array('eq' => true))
+    ->addAttributeToFilter('parent_id', array('eq' => 13)) // the id of category "Mærker"
+    ->addAttributeToSort('name', 'ASC')
+    ->load();
+
+?>
+<div id="brand-images">
+    <?
+    /** @var $category Mage_Catalog_Model_Category */
+    foreach ($brand_categories as $category) :?>
+        <a href="<? echo $category->getUrl() ?>">
+            <div class="brand-image">
+                <div>
+                    <img src="<? echo $category->getImageUrl() ?>"
+                         alt="<? echo $category->getName() ?>"
+                         title="<? echo $category->getName() ?>"
+                         height="60" />
+                </div>
+            </div>
+        </a>
+    <? endforeach; ?>
+</div>
