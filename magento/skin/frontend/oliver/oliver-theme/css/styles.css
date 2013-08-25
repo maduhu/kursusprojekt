@@ -40,7 +40,7 @@ img {
 }
 
 a {
-    color: #1e7ec8;
+    color: #542437;
     text-decoration: underline;
 }
 
@@ -457,7 +457,7 @@ button.button {
 button.button span {
     display: block;
     height: 19px;
-    border: 1px solid #b9bede;
+    border: 1px solid #FA6900;
     background: #F38630;
     padding: 0 8px;
     font: bold 12px/19px Arial, Helvetica, sans-serif;
@@ -1030,8 +1030,8 @@ p.required {
     padding-left: 8px;
     padding-bottom: 8px;
 
-    border-top: 1px solid #e2e2e2;
-    border-bottom: 1px solid #e2e2e2;
+    border-top: 1px solid #E0E4CC;
+    border-bottom: 1px solid #E0E4CC;
 
     text-align: center;
 }
@@ -1678,7 +1678,7 @@ tr.summary-details-excluded {
 }
 
 .header .form-search button.button div {
-    border: 1px solid #B9BEDE;
+    border: 1px solid #FA6900;
     padding: 9px;
     color: #fff;
     font-weight: bold;
@@ -1821,7 +1821,7 @@ tr.summary-details-excluded {
 }
 
 #nav li.active a {
-    color: #F38630;
+    color: #FA6900;
 }
 
 #nav a {
@@ -1938,7 +1938,7 @@ tr.summary-details-excluded {
     min-height: 16px;
     padding: 1px 0 1px;
     text-transform: uppercase;
-    color: #F38630;
+    color: #FA6900;
 }
 
 .block .block-title strong span {
@@ -2656,7 +2656,7 @@ tr.summary-details-excluded {
 
 .products-grid .product-image img {
     padding: 8px;
-    border: 1px solid #E2E2E2;
+    border: 1px solid #E0E4CC;
 }
 
 .products-grid .product-name {
@@ -3993,6 +3993,10 @@ tr.summary-details-excluded {
 }
 
 .cms-index-index .subtitle {
+}
+
+#gallery {
+    border: 1px solid #E0E4CC;
 }
 
 /* Sitemap */
