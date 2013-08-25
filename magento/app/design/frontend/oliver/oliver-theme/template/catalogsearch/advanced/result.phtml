@@ -23,9 +23,14 @@
  * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+
+/** @var $this Mage_CatalogSearch_Block_Result  */
+
 ?>
 <div class="page-title">
-    <h1><?php echo $this->__('Catalog Advanced Search') ?></h1>
+    <h1>
+        <?php echo $this->__('Catalog Advanced Search') ?>
+    </h1>
 </div>
 <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
 <?php if($this->getResultCount()): ?>
@@ -33,7 +38,12 @@
         <?php echo $this->helper('catalogsearch')->__('<strong>%d item(s)</strong> were found using the following search criteria', $this->getResultCount()); ?>
     </p>
 <?php else: ?>
-    <p class="error-msg"><?php echo $this->helper('catalogsearch')->__('No items were found using the following search criteria.');?> <a href="<?php echo $this->getFormUrl(); ?>"><?php echo $this->helper('catalogsearch')->__('Modify your search'); ?></a></p>
+    <p class="error-msg">
+        <?php echo $this->helper('catalogsearch')->__('No items were found using the following search criteria.');?>
+        <a href="<?php echo $this->getFormUrl(); ?>">
+            <?php echo $this->helper('catalogsearch')->__('Modify your search'); ?>
+        </a>
+    </p>
 <?php endif; ?>
 
 <div class="advanced-search-summary">

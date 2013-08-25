@@ -177,7 +177,7 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template {
             $products = $category->getProductCollection()->addAttributeToSelect('*');
             foreach ($products as $product) {
                 if (!in_array($product->getId(), $ids)) {
-                    $this->_productCollection->addItem($product);
+                    //$this->_productCollection->addItem($product);
                 }
             }
         }

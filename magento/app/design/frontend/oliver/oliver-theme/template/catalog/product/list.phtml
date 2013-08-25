@@ -52,13 +52,14 @@
         ->addAttributeToSort('name', 'ASC')
         ->load();
 
+    /*
     $categories = array();
-    /** @var Mage_Catalog_Model_Product $_product */
+    /** @var Mage_Catalog_Model_Product $_product *//*
     foreach ($_productCollection as $_product) {
         $categories = array_merge($categories, $_product->getCategoryIds());
     }
 
-    $categories = array_unique($categories);
+    $categories = array_unique($categories);*/
 
     $brand_categories = Mage::getModel('catalog/category')->getCollection()
         ->addAttributeToFilter('is_active', array('eq' => true))
@@ -99,7 +100,7 @@
         <?
             /** @var $category Mage_Catalog_Model_Category */
             foreach ($brand_categories as $category) :?>
-            <? if (in_array($category->getId(), $categories)): ?>
+            <? //if (in_array($category->getId(), $categories)): ?>
                 <a href="<? if ($category->getUrl() == $currentUrl)
                                 echo $baseUrl;
                             else
@@ -107,7 +108,7 @@
                    class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>">
                     <? echo $category->getName() ?><br/>
                 </a>
-            <? endif; ?>
+            <? //endif; ?>
         <? endforeach; ?>
         <h2>
             Materiale
