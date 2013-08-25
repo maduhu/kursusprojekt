@@ -40,9 +40,8 @@
 
     $params = "?material=". $currentMaterial . "&order=" . $order;
 
-    preg_match("@\/([\w\d]+)$@", $currentUrl, $page);
-
-    $baseUrl = $this->getBaseUrl() . $page[1] . $params;
+    preg_match_all("@\/([\w\d-]+)[^$]@", $currentUrl, $page);
+    $baseUrl = $this->getBaseUrl() . $page[1][1] . $params;
 
     $_productCollection = $this->getLoadedProductCollection();
 
@@ -64,7 +63,7 @@
 
     $brand_categories = Mage::getModel('catalog/category')->getCollection()
         ->addAttributeToFilter('is_active', array('eq' => true))
-        ->addAttributeToFilter('parent_id', array('eq' => 5)) // the id of category "Mærker"
+        ->addAttributeToFilter('parent_id', array('eq' => 13)) // the id of category "Mærker"
         ->addAttributeToSort('name', 'ASC')
         ->load();
 
