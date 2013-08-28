@@ -4,3 +4,4 @@ magento/var
 .idea/
 magento/media/catalog/product/cache
 *.DS_Store
+magento/app/etc/local.xml
