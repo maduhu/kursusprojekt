@@ -166,17 +166,21 @@ class Mage_CatalogSearch_Block_Result extends Mage_Core_Block_Template {
 
         $categories = Mage::getModel('catalog/category')->getCollection()
             ->addAttributeToFilter('is_active', array('eq' => true))
-            ->addAttributeToFilter('name', array('like' => '%' . $searchTerm . '%'))
+            ->addAttributeToFilter('parent_id', array('in' => array(4, 13))) // The category is either a subcategory of "Produkter" or "Mærker"
+            ->addAttributeToFilter('name', array('eq' => $searchTerm))
             ->load();
 
         /**
          * Should be pretty fast, since we do not select a lot of categories
+         *
+         * @var $category Mage_Catalog_Model_Category
          */
         foreach ($categories as $category) {
             $products = $category->getProductCollection()->addAttributeToSelect('*');
+            /** @var $product Mage_Catalog_Model_Product */
             foreach ($products as $product) {
                 if (!in_array($product->getId(), $ids)) {
-                    //$this->_productCollection->addItem($product);
+                    $this->_productCollection->addItem($product);
                 }
             }
         }

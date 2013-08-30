@@ -30,7 +30,7 @@
 }
 
 body {
-    font: 12px/1.55 Arial, Helvetica, sans-serif;
+    font: 14px/1.55 "Volkorn", Helvetica, sans-serif;
     text-align: center;
 }
 
@@ -262,6 +262,7 @@ ul, ol {
 
 .main-container {
     /* background: #fbfaf6 url(../images/bkg_main1.gif) 50% 0 no-repeat; */
+    background-color: #f1e8de;
 }
 
 .main {
@@ -269,9 +270,10 @@ ul, ol {
     margin: 0 auto;
     min-height: 400px;
     padding: 25px 25px 80px;
-    /* background: #fffffe url(../images/bkg_main2.gif) 0 0 no-repeat; */
-    background-color: #FFFFFF;
     text-align: left;
+
+    /* background: #fffffe url(../images/bkg_main2.gif) 0 0 no-repeat; */
+    background-color: #f1e8de;
 }
 
 /* Base Columns */
@@ -1030,8 +1032,8 @@ p.required {
     padding-left: 8px;
     padding-bottom: 8px;
 
-    border-top: 1px solid #E0E4CC;
-    border-bottom: 1px solid #E0E4CC;
+    border-top: 1px solid #797979;
+    border-bottom: 1px solid #797979;
 
     text-align: center;
 }
@@ -1768,8 +1770,8 @@ tr.summary-details-excluded {
 
 /********** < Navigation */
 .nav-container {
-    /* background: #0a263d url(../images/bkg_nav0.jpg) 50% 0 repeat-y; */
-    border-bottom: 1px solid #000;
+    /* background: #0a263d url(../images/bkg_nav0.jpg) 50% 0 repeat-y;*/
+    border-bottom: 2px solid #F38630;
 }
 
 #nav {
@@ -2619,8 +2621,13 @@ tr.summary-details-excluded {
 }
 
 .category-products #left-column a {
-    color: #618499;
+    color: #445c56;
     text-decoration: none;
+    font-size: 14px;
+}
+
+.category-products #left-column a:hover {
+    text-decoration: underline;
 }
 
 .category-products #left-column a.active {
@@ -2670,6 +2677,7 @@ tr.summary-details-excluded {
 }
 
 .products-grid .product-image {
+    background-color: #fff;
     display: block;
     width: 165px;
     height: 165px;
@@ -2678,7 +2686,7 @@ tr.summary-details-excluded {
 
 .products-grid .product-image img {
     padding: 8px;
-    border: 1px solid #E0E4CC;
+    border: 1px solid #797979;
 }
 
 .products-grid .product-name {
@@ -3323,6 +3331,11 @@ tr.summary-details-excluded {
     /*width: 267px;*/
 }
 
+.product-view .product-img-box img {
+    border: 1px solid #797979;
+    background-color: #fff;
+}
+
 .col3-layout .product-view .product-img-box {
     float: none;
     margin: 0 auto;
@@ -3394,6 +3407,10 @@ tr.summary-details-excluded {
     position: absolute;
     right: 2px;
     top: 0;
+}
+
+.product-view .product-img-box .more-views {
+    margin-top: 30px;
 }
 
 .product-view .product-img-box .more-views h2 {
