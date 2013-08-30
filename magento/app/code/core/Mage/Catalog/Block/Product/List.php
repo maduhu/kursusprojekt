@@ -51,9 +51,11 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      * Retrieve loaded category collection
      *
      * @param $material
+     * @param $category
+     *
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    protected function _getProductCollection($material = null) {
+    protected function _getProductCollection($material = null, $category = null) {
         if (is_null($this->_productCollection)) {
             /* @var $layer Mage_Catalog_Model_Layer */
             $layer = $this->getLayer();
@@ -76,10 +78,10 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
 
             $origCategory = null;
             if ($this->getCategoryId()) {
-                $category = Mage::getModel('catalog/category')->load($this->getCategoryId());
-                if ($category->getId()) {
+                $cat = Mage::getModel('catalog/category')->load($this->getCategoryId());
+                if ($cat->getId()) {
                     $origCategory = $layer->getCurrentCategory();
-                    $layer->setCurrentCategory($category);
+                    $layer->setCurrentCategory($cat);
                 }
             }
             $this->_productCollection = $layer->getProductCollection();
@@ -96,7 +98,60 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
                 ->addAttributeToFilter('materiale', array('eq' => (int)$material));
         }
 
+        if ($category != null) {
+
+            $products = new Mage_Catalog_Model_Resource_Product_Collection();
+
+            /** @var $product Mage_Catalog_Model_Product */
+            foreach ($this->_productCollection as $product) {
+                if (in_array($category, $product->getCategoryIds())) {
+                    print_r($product->getId());
+                }
+            }
+
+            //$this->_productCollection = $products;
+        }
+
         return $this->_productCollection;
+    }
+
+    function addURLParameter($url, $paramName, $paramValue) {
+        $url_data = parse_url($url);
+        if (!isset($url_data["query"])) {
+            $url_data["query"] = "";
+        }
+
+        $params = array();
+        parse_str($url_data['query'], $params);
+        $params[$paramName] = $paramValue;
+        $url_data['query'] = http_build_query($params);
+        return $this->build_url($url_data);
+    }
+
+    function build_url($url_data) {
+        $url = "";
+        if (isset($url_data['host'])) {
+            $url .= $url_data['scheme'] . '://';
+            if (isset($url_data['user'])) {
+                $url .= $url_data['user'];
+                if (isset($url_data['pass'])) {
+                    $url .= ':' . $url_data['pass'];
+                }
+                $url .= '@';
+            }
+            $url .= $url_data['host'];
+            if (isset($url_data['port'])) {
+                $url .= ':' . $url_data['port'];
+            }
+        }
+        $url .= $url_data['path'];
+        if (isset($url_data['query'])) {
+            $url .= '?' . $url_data['query'];
+        }
+        if (isset($url_data['fragment'])) {
+            $url .= '#' . $url_data['fragment'];
+        }
+        return $url;
     }
 
     /**
@@ -136,12 +191,13 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
      */
     protected function _beforeToHtml() {
 
-        $material = urldecode($this->getRequest()->getParam('material'));
+        $material = $this->getRequest()->getParam('material');
+        $category = $this->getRequest()->getParam('category');
 
         $toolbar = $this->getToolbarBlock();
 
         // called prepare sortable parameters
-        $collection = $this->_getProductCollection($material);
+        $collection = $this->_getProductCollection($material, $category);
 
         // use sortable parameters
         if ($orders = $this->getAvailableOrders()) {
@@ -163,10 +219,10 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
         $this->setChild('toolbar', $toolbar);
         Mage::dispatchEvent(
             'catalog_block_product_list_collection',
-            array('collection' => $this->_getProductCollection($material))
+            array('collection' => $this->_getProductCollection($material, $category))
         );
 
-        $this->_getProductCollection($material)->load();
+        $this->_getProductCollection($material, $category)->load();
 
         return parent::_beforeToHtml();
     }

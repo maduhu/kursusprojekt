@@ -33,11 +33,12 @@
 <?php
 
     $currentUrl = preg_replace("@\?.*@", "", $this->helper('core/url')->getCurrentUrl());
-    $currentMaterial = urldecode($this->getRequest()->getParam('material'));
+    $currentMaterial = $this->getRequest()->getParam('material');
+    $currentCategory = $this->getRequest()->getParam('category');
 
     $order = urldecode($this->getRequest()->getParam('order'));
 
-    $params = "?material=". $currentMaterial . "&order=" . $order;
+    $params = "?material=". $currentMaterial . "&order=" . $order . "&category=" . $currentCategory;
 
     preg_match_all("@\/([\w\d-]+)[^$]@", $currentUrl, $page);
     $baseUrl = $this->getBaseUrl() . "produkter" . $params;
@@ -52,14 +53,13 @@
         ->addAttributeToSort('name', 'ASC')
         ->load();
 
-    /*
     $categories = array();
-    /** @var Mage_Catalog_Model_Product $_product *//*
+    /** @var Mage_Catalog_Model_Product $_product */
     foreach ($_productCollection as $_product) {
         $categories = array_merge($categories, $_product->getCategoryIds());
     }
 
-    $categories = array_unique($categories);*/
+    $categories = array_unique($categories);
 
     $brand_categories = Mage::getModel('catalog/category')->getCollection()
         ->addAttributeToFilter('is_active', array('eq' => true))
@@ -91,6 +91,7 @@
                         else
                             echo $category->getUrl() . $params ?>"
                class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>">
+                <? if ($category->getUrl() == $currentUrl) echo ">"; ?>
                 <? echo $category->getName() ?><br/>
             </a>
         <? endforeach; ?>
@@ -100,15 +101,16 @@
         <?
             /** @var $category Mage_Catalog_Model_Category */
             foreach ($brand_categories as $category) :?>
-            <? //if (in_array($category->getId(), $categories)): ?>
-                <a href="<? if ($category->getUrl() == $currentUrl)
-                                echo $baseUrl;
+            <? if (in_array($category->getId(), $categories)): ?>
+                <a href="<? if ($category->getId() == $currentCategory)
+                                echo $this->addURLParameter($baseUrl, "category", "");
                             else
-                                echo $category->getUrl() . $params ?>"
-                   class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>">
+                                echo $this->addURLParameter($baseUrl, "category", $category->getId()); ?>"
+                   class="<? if ($category->getId() == $currentCategory) echo "active"; ?>">
+                    <? if ($category->getId() == $currentCategory) echo ">"; ?>
                     <? echo $category->getName() ?><br/>
                 </a>
-            <? //endif; ?>
+            <? endif; ?>
         <? endforeach; ?>
         <h2>
             Materiale
@@ -116,10 +118,11 @@
         <?
             foreach ($materials as $key => $material) :?>
             <a href="<? if ($currentMaterial == $key)
-                            echo $currentUrl;
+                            echo $this->addURLParameter($baseUrl, "material", "");
                         else
-                            echo $currentUrl . "?material=" .$key; ?>"
+                            echo $this->addURLParameter($baseUrl, "material", $key); ?>"
                class="<? if ($currentMaterial == $key) echo "active"; ?>">
+                <? if ($currentMaterial == $key) echo ">"; ?>
                 <? echo $material; ?><br/>
             </a>
         <? endforeach; ?>

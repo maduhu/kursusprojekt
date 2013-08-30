@@ -1651,9 +1651,11 @@ tr.summary-details-excluded {
     height: 30px;
 }
 
-.header .form-search {
+.header #search_mini_form {
     position: relative;
-    top: 0;
+}
+
+.header .form-search {
     margin-top: 10px;
 }
 
@@ -2037,7 +2039,7 @@ tr.summary-details-excluded {
 .block-cart {
     margin-top: 15px;
     width: 360px;
-    float: right;
+    float: inherit;
 }
 
 /* Mini Products List */
@@ -2632,7 +2634,6 @@ tr.summary-details-excluded {
 
 .category-products #left-column a.active {
     color: #000;
-    padding-left: 10px;
 }
 
 /* Brand view Grid */
