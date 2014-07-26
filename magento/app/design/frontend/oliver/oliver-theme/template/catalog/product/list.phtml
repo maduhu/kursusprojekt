@@ -6,10 +6,16 @@
     }
     .products-grid div.item {
         float: left;
-        height: 230px;
+        height: 250px;
         width: 138px;
-        padding: 25px 25px 25px 10px;
+        padding: 5px 25px 5px 10px;
+        font-size: 90%;
     }
+
+    .products-grid div.item h2 {
+        font-size: 105%;
+    }
+
     .category-products #left-column a {
         color: #395C53;
         float: left;
@@ -106,16 +112,11 @@ $brand_categories = Mage::getModel('catalog/category')->getCollection()
     ->addAttributeToSort('name', 'ASC')
     ->load();
 
-
-$attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'materiale');
-$materials = array();
-if ($attribute->usesSource()) {
-    $options = $attribute->getSource()->getAllOptions(false); // get material options
-    foreach ($options as $option) {
-        $materials[$option['value']] = $option['label'];
-    }
-    asort($materials);
-}
+$material_categories = Mage::getModel('catalog/category')->getCollection()
+    ->addAttributeToFilter('is_active', array('eq' => true))
+    ->addAttributeToFilter('parent_id', array('eq' => 19)) // the id of category "Materialer"
+    ->addAttributeToSort('name', 'ASC')
+    ->load();
 
 ?>
 
@@ -128,6 +129,11 @@ if ($attribute->usesSource()) {
         <h2>
             Smykker
         </h2>
+        <div style="clear: both">
+            <a id="category" value="-1">
+                Vis alle<br/>
+            </a>
+        </div>
         <?
         /** @var $category Mage_Catalog_Model_Category */
         foreach ($jew_categories as $category) :?>
@@ -146,6 +152,11 @@ if ($attribute->usesSource()) {
         <h2>
             Mærker
         </h2>
+        <div style="clear: both">
+            <a id="brand" value="-1">
+                Vis alle<br/>
+            </a>
+        </div>
         <?
         /** @var $category Mage_Catalog_Model_Category */
         foreach ($brand_categories as $category) :?>
@@ -164,15 +175,25 @@ if ($attribute->usesSource()) {
         <h2>
             Materiale
         </h2>
-        <?
-        foreach ($materials as $key => $material) :?>
-            <a href="#"
-               class="<? if ($currentMaterial == $key) echo "active"; ?>"
-               id="material"
-               value="<?php echo $key; ?>">
-                <? if ($currentMaterial == $key) echo ">"; ?>
-                <? echo $material; ?><br/>
+        <div style="clear: both">
+            <a id="material" value="-1">
+                Vis alle<br/>
             </a>
+        </div>
+        <?
+        /** @var $category Mage_Catalog_Model_Category */
+        foreach ($material_categories as $category) :?>
+            <div style="clear: both">
+                <a class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>"
+                   id="material"
+                   value="<?php echo $category->getId(); ?>">
+                    <? if ($category->getUrl() == $currentUrl) echo ">"; ?>
+                    <? echo $category->getName() ?><br/>
+                </a>
+                <span id="<?php echo $category->getId(); ?>" class="categoryProductCount">
+
+                </span>
+            </div>
         <? endforeach; ?>
     </div>
     <div id="right-column">
@@ -209,7 +230,7 @@ if ($attribute->usesSource()) {
                             <?php
                             $name = $_product->getName();
                             $len = strlen($name);
-                            $maxlen = 35;
+                            $maxlen = 21;
                             if ($len > $maxlen) {
                                 $name = substr($name, 0, $maxlen) . "...";
                             }
@@ -239,7 +260,7 @@ if ($attribute->usesSource()) {
     </div>
 </div>
 
-<script> console.log("-------------");
+<script>
     // To avoid conflicts between prototype and jQuery.
     var $j = jQuery.noConflict();
 
@@ -260,13 +281,15 @@ if ($attribute->usesSource()) {
         echo 'brands.push(' . $category->getId() . ');';
       }
 
-      foreach($materials as $key => $material) {
-        echo 'materials.push(' . $key . ');';
+      foreach($material_categories as $category) {
+        $categories[] = $category->getId();
+        echo 'materials.push(' . $category->getId() . ');';
       }
+
     ?>
 
-
-    var categoryMap = new Array();
+    var allProducts = [];
+    var categoryMap = [];
     <?php
 
         // Extract product, category data from database.
@@ -286,6 +309,11 @@ if ($attribute->usesSource()) {
                 $products[$id][] = $cat;
             }
         }
+
+        // Convert PHP array to JS array.
+        $jsArray = json_encode($activeProducts);
+        echo 'var allProducts = '. $jsArray .';';
+
 
         $categoryMap = Array();
 
@@ -354,52 +382,84 @@ if ($attribute->usesSource()) {
         return false;
     }
 
+    function containsAll(/* pass all arrays here */) {
+        var output = [];
+        var cntObj = {};
+        var array, item, cnt;
+        // for each array passed as an argument to the function
+        for (var i = 0; i < arguments.length; i++) {
+            array = arguments[i];
+            // for each element in the array
+            for (var j = 0; j < array.length; j++) {
+                item = "-" + array[j];
+                cnt = cntObj[item] || 0;
+                // if cnt is exactly the number of previous arrays,
+                // then increment by one so we count only one per array
+                if (cnt == i) {
+                    cntObj[item] = cnt + 1;
+                }
+            }
+        }
+        // now collect all results that are in all arrays
+        for (item in cntObj) {
+            if (cntObj.hasOwnProperty(item) && cntObj[item] === arguments.length) {
+                output.push(item.substring(1));
+            }
+        }
+        return(output);
+    }
+
+    // Convert allProducts from JSON object to JS array.
+    var allProducts = $j.map(allProducts, function(el) { return el; })
+
 
     var categoryString = "category=";
     var brandString = "brand=";
+    var materialString = "material=";
 
     function getUrlHashValues() {
-        hash = window.location.hash;
 
-        var categoryIndex = hash.indexOf(categoryString);
-        var brandIndex = hash.indexOf(brandString);
+        pairs = location.hash.substr(1).split('&').map(function(pair) {
+            var kv = pair.split('=', 2);
+            return [decodeURIComponent(kv[0]), kv.length === 2 ? decodeURIComponent(kv[1]) : null];
+        });
 
-        var result = [];
-
-        if(categoryIndex != -1) {
-            if(brandIndex == -1) {
-                result["category"] = hash.substring( (categoryIndex + categoryString.length) );
-            } else {
-                // -1 to account for the &.
-                result["category"] = hash.substring((categoryIndex + categoryString.length), (brandIndex - 1));
-            }
-        }
-
-        if(brandIndex != -1) {
-            result["brand"] = hash.substring((brandIndex + brandString.length));
+        result = [];
+        for(var i = 0; i < pairs.length; i++) {
+            result[pairs[i][0]] = pairs[i][1];
         }
 
         return result;
+
     }
 
-    function updateUrl(type) {
+    function updateUrl() {
 
+        hashValues = getUrlHashValues();
 
-        //console.log("c: " + categoryIndex + " b: " + brandIndex);
+        var newHash = "";
 
-        if(type == "category") {
-            if(selectedBrand == -1) {
-                location.hash = categoryString + selectedCat;
-            } else {
-               location.hash = categoryString + selectedCat + "&" + brandString + selectedBrand;
-            }
-        } else if(type == "brand") {
-            if(selectedCat == -1) {
-                location.hash = brandString + selectedBrand;
-            } else {
-                location.hash = categoryString + selectedCat + "&" + brandString + selectedBrand;
+        if(selectedCat > 0) {
+            newHash += "category=" + selectedCat;
+
+            if(selectedBrand > 0 || selectedMaterial > 0) {
+                newHash += "&"
             }
         }
+
+        if(selectedBrand > 0) {
+            newHash += "brand=" + selectedBrand;
+
+            if(selectedMaterial > 0) {
+                newHash += "&"
+            }
+        }
+
+        if(selectedMaterial > 0) {
+            newHash += "material=" + selectedMaterial;
+        }
+
+        location.hash = newHash;
 
     }
 
@@ -407,9 +467,12 @@ if ($attribute->usesSource()) {
         location.hash = "";
     }
 
+    function updateCountCell(id, n) {
+        $j("span.categoryProductCount#"+id).html("("+n+")");
+    }
 
     function updateProductCount(n) {
-console.log("n: "+n);
+
         // Toolbar counter
         $j("#toolbarProductCount").html(n);
         if(n == 0) {
@@ -420,53 +483,329 @@ console.log("n: "+n);
             $j("span#msg").html("");
         }
 
-        if(selectedBrand > 0) {
-            var categoryCount = categories.length;
-            for(var i = 0; i < categoryCount; i++) {
-                var category = categories[i];
-                var count = categoryMap[category][selectedBrand];
-                $j("span.categoryProductCount#"+category).html("("+count+")");
-            }
-        } else {
-            var categoryCount = categories.length;
-            for(var i = 0; i < categoryCount; i++) {
-                var category = categories[i];
-                if(productsCategoryMap[category]) {
-                    var count = productsCategoryMap[category].length;
-                    $j("span.categoryProductCount#"+category).html("("+count+")");
+
+        if(selectedCat != -1 && selectedBrand != -1 && selectedMaterial != -1) {
+
+            for(var i = 0; i < categories.length; i++) {
+                var product = categories[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[product], productsCategoryMap[selectedBrand], productsCategoryMap[selectedMaterial]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
                 } else {
-                    $j("span.categoryProductCount#"+category).html("(0)");
+                    updateCountCell(product, 0);
                 }
             }
-        }
 
-        if(selectedCat > 0) {
-            var categoryCount = brands.length;
-            for(var i = 0; i < categoryCount; i++) {
-                var category = brands[i];
-                var count = categoryMap[category][selectedCat];
-                $j("span.categoryProductCount#"+category).html("("+count+")");
-            }
-        } else {
-            var categoryCount = brands.length;
-            for(var i = 0; i < categoryCount; i++) {
-                var category = brands[i];
-                if(productsCategoryMap[category]) {
-                    var count = productsCategoryMap[category].length;
-                    $j("span.categoryProductCount#"+category).html("("+count+")");
+            for(var i = 0; i < brands.length; i++) {
+                var product = brands[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[selectedCat], productsCategoryMap[product], productsCategoryMap[selectedMaterial]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
                 } else {
-                    $j("span.categoryProductCount#"+category).html("(0)");
+                    updateCountCell(product, 0);
                 }
             }
+
+            for(var i = 0; i < materials.length; i++) {
+                var product = materials[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[selectedCat], productsCategoryMap[selectedBrand], productsCategoryMap[product]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+        } else if(selectedCat != -1 && selectedBrand != -1) {
+
+            for(var i = 0; i < materials.length; i++) {
+                var product = materials[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[selectedCat], productsCategoryMap[selectedBrand], productsCategoryMap[product]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < categories.length; i++) {
+                var product = categories[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[product], productsCategoryMap[selectedBrand]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < brands.length; i++) {
+                var product = brands[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[selectedCat], productsCategoryMap[product]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+
+
+        } else if(selectedCat != -1 && selectedMaterial != -1) {
+
+            for(var i = 0; i < brands.length; i++) {
+                var product = brands[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[selectedCat], productsCategoryMap[product], productsCategoryMap[selectedMaterial]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < categories.length; i++) {
+                var product = categories[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[product], productsCategoryMap[selectedMaterial]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+
+
+        } else if(selectedBrand != -1 && selectedMaterial != -1) {
+
+            for(var i = 0; i < categories.length; i++) {
+                var product = categories[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[product], productsCategoryMap[selectedBrand], productsCategoryMap[selectedMaterial]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < brands.length; i++) {
+                var product = brands[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[selectedMaterial], productsCategoryMap[product]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < materials.length; i++) {
+                var product = materials[i];
+
+                if(productsCategoryMap[product]) {
+                    var arrays = [productsCategoryMap[selectedBrand], productsCategoryMap[product]];
+                    var res = containsAll.apply(this, arrays).length;
+                    if(res != 0) {
+                        updateCountCell(product, res);
+                    } else {
+                        updateCountCell(product, 0);
+                    }
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+        } else if(selectedCat != -1) {
+
+            for(var i = 0; i < categories.length; i++) {
+                var product = categories[i];
+                if(productsCategoryMap[product]) {
+                    var count = productsCategoryMap[product].length;
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < brands.length; i++) {
+                var product = brands[i];
+                if(productsCategoryMap[product]) {
+                    var count = categoryMap[product][selectedCat];
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < materials.length; i++) {
+                var product = materials[i];
+                if(productsCategoryMap[product]) {
+                    var count = categoryMap[product][selectedCat];
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+        } else if(selectedBrand != -1) {
+
+
+            for(var i = 0; i < categories.length; i++) {
+                var product = categories[i];
+                if(productsCategoryMap[product]) {
+                    var count = categoryMap[product][selectedBrand];
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < brands.length; i++) {
+                var product = brands[i];
+                if(productsCategoryMap[product]) {
+                    var count = productsCategoryMap[product].length;
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < materials.length; i++) {
+                var product = materials[i];
+                if(productsCategoryMap[product]) {
+                    var count = categoryMap[product][selectedBrand];
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+        } else if(selectedMaterial != -1) {
+
+            for(var i = 0; i < categories.length; i++) {
+                var product = categories[i];
+                if(productsCategoryMap[product]) {
+                    var count = categoryMap[product][selectedMaterial];
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < brands.length; i++) {
+                var product = brands[i];
+                if(productsCategoryMap[product]) {
+                    var count = categoryMap[product][selectedMaterial];
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < materials.length; i++) {
+                var product = materials[i];
+                if(productsCategoryMap[product]) {
+                    var count = productsCategoryMap[product].length;
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+        } else {
+
+            for(var i = 0; i < categories.length; i++) {
+                var product = categories[i];
+                if(productsCategoryMap[product]) {
+                    var count = productsCategoryMap[product].length;
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < brands.length; i++) {
+                var product = brands[i];
+                if(productsCategoryMap[product]) {
+                    var count = productsCategoryMap[product].length;
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
+            for(var i = 0; i < materials.length; i++) {
+                var product = materials[i];
+                if(productsCategoryMap[product]) {
+                    var count = productsCategoryMap[product].length;
+                    updateCountCell(product, count);
+                } else {
+                    updateCountCell(product, 0);
+                }
+            }
+
         }
-
-
-
     }
 
 
     function hideAllProducts() {
-        console.log("HIDING");
         $j(".products-grid div.item").css("display", "none");
     }
 
@@ -475,96 +814,51 @@ console.log("n: "+n);
         updateProductCount($j(".products-grid div.item").length)
     }
 
-
     function displayAvailableProducts() {
         hideAllProducts();
 
-        var activeProducts = [];
-        var toDisplay = [];
+        var categoryProducts = allProducts;
+        var brandProducts = allProducts;
+        var materialProducts = allProducts;
 
-        var one = [];
-        var two = [];
-
-        if(selectedCat > 0 && selectedBrand > 0 && productsCategoryMap[selectedCat] && productsCategoryMap[selectedBrand]) {
-            one = productsCategoryMap[selectedCat];
-            two = productsCategoryMap[selectedBrand];
-
-            for(var i = 0; i < one.length; i++) {
-
-//console.log("co: "+ one[i] +" "+two);
-                    if(inArray(one[i],two)) {
-                        toDisplay.push(one[i]);
-                    }
-
-            }
-        } else if(productsCategoryMap[selectedCat] && selectedCat > 0 && selectedBrand == -1) {
-            toDisplay = productsCategoryMap[selectedCat];
-        } else if(productsCategoryMap[selectedBrand] && selectedBrand > 0 && selectedCat == -1) {
-            toDisplay = productsCategoryMap[selectedBrand];
-        }
-        console.log("todisplay: "+toDisplay);
-
-        var n = toDisplay.length;
-
-        for(var i = 0; i < n; i++) {
-            //console.log($j(".products-grid div.item#12" + toDisplay[i]).attr("id"));
-            $j(".products-grid div#" + toDisplay[i] + ".item").css("display", "block");
+        if(selectedCat != -1) {
+            categoryProducts = productsCategoryMap[selectedCat];
         }
 
-        console.log(":: " + $j(".products-grid div#12.item").attr("id"));
+        if(selectedBrand != -1) {
+            brandProducts = productsCategoryMap[selectedBrand];
+        }
 
-        /*
-        if(selectedCat > 0) {
+        if(selectedMaterial != -1) {
+            materialProducts = productsCategoryMap[selectedMaterial];
+        }
+
+
+        if(categoryProducts && brandProducts && materialProducts) {
+            var arrays = [];
+            arrays.push(categoryProducts);
+            arrays.push(brandProducts);
+            arrays.push(materialProducts);
+
+            var toDisplay = containsAll.apply(this, arrays);
+
+            var n = toDisplay.length;
+
             for(var i = 0; i < n; i++) {
-                $j(".products-grid div.item#" + productsCategoryMap[selectedCat][i]).css("display", "block");
+                $j(".products-grid div#" + toDisplay[i] + ".item").css("display", "block");
             }
-        } else if(selectedBrand > 0) {
-            for(var i = 0; i < n; i++) {
-                $j(".products-grid div.item#" + productsCategoryMap[selectedBrand][i]).css("display", "block");
-            }
-        }*/
-
-        /*if(productsCategoryMap[selectedCat]) {
-            if(selectedCat > 0) {
-                var noProducts = productsCategoryMap[selectedCat].length;
-                for(var i = 0; i < noProducts; i++) {
-                    //$j(".products-grid div.item#" + productsCategoryMap[selectedCat][i]).css("display", "block");
-
-                    if(!inArray(productsCategoryMap[selectedCat][i], activeProducts)) {
-                        activeProducts.push(productsCategoryMap[selectedCat][i]);
-                    }
-
-                    toDisplay.push(productsCategoryMap[selectedCat][i]);
-                }
-            }
+        } else {
+            var n = 0;
         }
-        if(productsCategoryMap[selectedBrand]) {
-            if(selectedBrand > 0) {
-                var noProducts = productsCategoryMap[selectedBrand].length;
-                for(var i = 0; i < noProducts; i++) {
-                    //$j(".products-grid div.item#" + productsCategoryMap[selectedBrand][i]).css("display", "block");
 
-                    if(!inArray(productsCategoryMap[selectedBrand][i], activeProducts)) {
-                        activeProducts.push(productsCategoryMap[selectedBrand][i]);
-                    }
 
-                }
-            }
-        }*/
+
         updateProductCount(n);
 
     }
 
 
     function enableAllCategories() {
-        /*for(var i = 0; i < categories.length; i++) {
-            $j("#left-column a#category[value='"+ categories[i] +"']").css("display", "block");
-        }
-
-        for(var i = 0; i < brands.length; i++) {
-            $j("#left-column a#brand[value='"+ brands[i] +"']").css("display", "block");
-        }*/
-
         $j("#left-column a").removeClass("disabled");
     }
 
@@ -576,45 +870,67 @@ console.log("n: "+n);
         $j("#left-column a").removeClass("active");
         $j("#left-column a#category[value="+ selectedCat +"]").addClass("active");
         $j("#left-column a#brand[value=" + selectedBrand + "]").addClass("active");
+        $j("#left-column a#material[value=" + selectedMaterial + "]").addClass("active");
         $j("#left-column a#category[value="+ selectedCat +"]").removeClass("disabled");
         $j("#left-column a#brand[value=" + selectedBrand + "]").removeClass("disabled");
+        $j("#left-column a#material[value=" + selectedMaterial + "]").removeClass("disabled");
     }
 
     function resetActive() {
         $j("#left-column a").removeClass("active");
+        $j("#left-column [value=-1]").addClass("active");
     }
 
     function disableUnavailable() {
         enableAllCategories();
 
-        //if(selectedCat >= 0) {
-            for(var i = 0; i < brands.length; i++) {
-                if( categoryMap[brands[i]][selectedCat] <= 0 ) {
-                    var element = $j("#left-column a#brand[value='" + brands[i] + "']");
-                    hideCategory(element);
-                }
-            }
-        //}
-
         for(var i = 0; i < brands.length; i++) {
+            if( categoryMap[brands[i]][selectedCat] <= 0 ) {
+                var element = $j("#left-column a#brand[value='" + brands[i] + "']");
+                hideCategory(element);
+            }
+
             if( categoryMap[brands[i]][selectedBrand] <= 0 ) {
+                var element = $j("#left-column a#brand[value='" + brands[i] + "']");
+                hideCategory(element);
+            }
+
+            if( categoryMap[brands[i]][selectedMaterial] <= 0 ) {
                 var element = $j("#left-column a#brand[value='" + brands[i] + "']");
                 hideCategory(element);
             }
         }
 
-        //if(selectedBrand >= 0) {
-            for(var i = 0; i < categories.length; i++) {
-                if( categoryMap[categories[i]][selectedBrand] <= 0 ) {
-                    var element = $j("#left-column a#category[value='" + categories[i] + "']");
-                    hideCategory(element);
-                }
-            }
-        //}
-
         for(var i = 0; i < categories.length; i++) {
+            if( categoryMap[categories[i]][selectedBrand] <= 0 ) {
+                var element = $j("#left-column a#category[value='" + categories[i] + "']");
+                hideCategory(element);
+            }
+
             if( categoryMap[categories[i]][selectedCat] <= 0 ) {
                 var element = $j("#left-column a#category[value='" + categories[i] + "']");
+                hideCategory(element);
+            }
+
+            if( categoryMap[categories[i]][selectedMaterial] <= 0 ) {
+                var element = $j("#left-column a#category[value='" + categories[i] + "']");
+                hideCategory(element);
+            }
+        }
+
+        for(var i = 0; i < materials.length; i++) {
+            if( categoryMap[materials[i]][selectedBrand] <= 0 ) {
+                var element = $j("#left-column a#material[value='" + materials[i] + "']");
+                hideCategory(element);
+            }
+
+            if( categoryMap[materials[i]][selectedCat] <= 0 ) {
+                var element = $j("#left-column a#material[value='" + materials[i] + "']");
+                hideCategory(element);
+            }
+
+            if( categoryMap[materials[i]][selectedMaterial] <= 0 ) {
+                var element = $j("#left-column a#material[value='" + materials[i] + "']");
                 hideCategory(element);
             }
         }
@@ -624,9 +940,11 @@ console.log("n: "+n);
 
     var selectedCat = -1;
     var selectedBrand = -1;
+    var selectedMaterial = -1;
     $j("#left-column a#reset").click(function() {
         selectedCat = -1;
         selectedBrand = -1;
+        selectedMaterial = -1;
         enableAllCategories();
         displayAllProducts();
         resetUrl();
@@ -638,18 +956,22 @@ console.log("n: "+n);
         if( $j(this).attr('id') == 'category' ) {
             selectedCat = $j(this).attr('value');
             updateUrl('category');
-        } else {
+        } else if( $j(this).attr('id') == 'brand' ) {
             selectedBrand = $j(this).attr('value');
             updateUrl('brand');
+        } else if( $j(this).attr('id') == 'material' ) {
+            selectedMaterial = $j(this).attr('value');
+            updateUrl('material');
         }
-console.log("sc: " + selectedCat + " sb: " + selectedBrand);
 
         disableUnavailable();
         displayAvailableProducts();
         setActive();
+
     });
 
     $j(document).ready(function() {
+
         var hashValues = getUrlHashValues();
 
         if(hashValues["category"]) {
@@ -658,15 +980,13 @@ console.log("sc: " + selectedCat + " sb: " + selectedBrand);
         if(hashValues["brand"]) {
             selectedBrand = hashValues["brand"];
         }
-console.log("c: " +selectedCat + " b: " + selectedBrand);
-
-        if(selectedCat > 0 || selectedBrand > 0) {
-            disableUnavailable();
-            displayAvailableProducts();
+        if(hashValues["material"]) {
+            selectedMaterial = hashValues["material"];
         }
 
-        var n = <?php echo sizeof($products); ?>;
-        updateProductCount(n);
+        disableUnavailable();
+        displayAvailableProducts();
+        setActive();
 
     });
 
