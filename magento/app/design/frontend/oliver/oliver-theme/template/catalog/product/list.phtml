@@ -474,7 +474,7 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
     function updateProductCount(n) {
 
         // Toolbar counter
-        $j("#toolbarProductCount").html(n);
+        $j("span#toolbarProductCount").html(n);
         if(n == 0) {
             $j("span#body").css("display", "none");
             $j("span#msg").html("<p class='note-msg'><?php echo $this->__('There are no products matching the selection.') ?></p>");
