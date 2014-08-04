@@ -71,7 +71,7 @@
 
 $activeProducts = Array();
 
-$currentUrl = preg_replace("@\?.*@", "", $this->helper('core/url')->getCurrentUrl());
+/*$currentUrl = preg_replace("@\?.*@", "", $this->helper('core/url')->getCurrentUrl());
 $currentMaterial = $this->getRequest()->getParam('material');
 
 $currentCategory = $this->getRequest()->getParam('category');
@@ -88,9 +88,34 @@ $params = "?material=". $currentMaterial . "&order=" . $order . "&category=" . $
 preg_match_all("@\/([\w\d-]+)[^$]@", $currentUrl, $page);
 $baseUrl = $this->getBaseUrl() . "produkter" . $params;
 
-$_productCollection = $this->getLoadedProductCollection();
 
-$_helper = $this->helper('catalog/output');
+
+$_helper = $this->helper('catalog/output');*/
+
+//$_productCollection = $this->getLoadedProductCollection();
+$_productCollection = Mage::getModel('catalog/product')->getCollection()
+    ->addAttributeToSelect('*')
+    ->addAttributeToFilter('status', array('eq' => 1))
+    ->addAttributeToSort('name', 'ASC');
+
+
+$_prdctColByPrice = Mage::getModel('catalog/product')->getCollection()
+    ->addAttributeToSelect('*')
+    ->addAttributeToFilter('status', array('eq' => 1))
+    ->addAttributeToSort('price', 'ASC');
+
+// Convert Object to Array
+$productsByName = array();
+foreach($_productCollection as $p) {
+    $productsByName[] = $p;
+}
+$productsByPrice = array();
+foreach($_prdctColByPrice as $p) {
+    $productsByPrice[] = $p;
+}
+
+
+
 
 $jew_categories = Mage::getModel('catalog/category')->getCollection()
     ->addAttributeToFilter('is_active', array('eq' => true))
@@ -117,7 +142,6 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
     ->addAttributeToFilter('parent_id', array('eq' => 19)) // the id of category "Materialer"
     ->addAttributeToSort('name', 'ASC')
     ->load();
-
 ?>
 
 
@@ -138,10 +162,9 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
         /** @var $category Mage_Catalog_Model_Category */
         foreach ($jew_categories as $category) :?>
             <div style="clear: both">
-                <a class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>"
-                   id="category"
-                   value="<?php echo $category->getId(); ?>">
-                    <? if ($category->getUrl() == $currentUrl) echo ">"; ?>
+                <a id="category"
+                   value="<?php echo $category->getId(); ?>"
+                >
                     <? echo $category->getName() ?><br/>
                 </a>
                 <span id="<?php echo $category->getId(); ?>" class="categoryProductCount">
@@ -161,10 +184,10 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
         /** @var $category Mage_Catalog_Model_Category */
         foreach ($brand_categories as $category) :?>
             <div style="clear: both">
-                <a class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>"
+                <a
                    id="brand"
-                   value="<?php echo $category->getId(); ?>">
-                    <? if ($category->getUrl() == $currentUrl) echo ">"; ?>
+                   value="<?php echo $category->getId(); ?>"
+                >
                     <? echo $category->getName() ?><br/>
                 </a>
                 <span id="<?php echo $category->getId(); ?>" class="categoryProductCount">
@@ -184,10 +207,10 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
         /** @var $category Mage_Catalog_Model_Category */
         foreach ($material_categories as $category) :?>
             <div style="clear: both">
-                <a class="<? if ($category->getUrl() == $currentUrl) echo "active"; ?>"
+                <a
                    id="material"
-                   value="<?php echo $category->getId(); ?>">
-                    <? if ($category->getUrl() == $currentUrl) echo ">"; ?>
+                   value="<?php echo $category->getId(); ?>"
+                >
                     <? echo $category->getName() ?><br/>
                 </a>
                 <span id="<?php echo $category->getId(); ?>" class="categoryProductCount">
@@ -203,60 +226,233 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
         <?php else: ?>
         </span>
 
-        <span id="body">
-            <?php echo $this->getToolbarHtml() ?>
-            <?php $_collectionSize = $_productCollection->count() ?>
-            <?php // $_columnCount = $this->getColumnCount(); ?>
-            <?php $_columnCount = 4 ?>
+        <span id="body" name="name_asc">
 
-            <div class="products-grid">
+            <div id="toolbar" class="toolbar">
+                <div class="pager">
+                    <p class="amount">
+                        <strong><?php echo $this->__('<span id="toolbarProductCount"></span> Vare(r)', $this->getTotalNum()) ?></strong>
+                    </p>
 
-            <? /** @var Mage_Catalog_Model_Product $_product */ ?>
-            <?php $i=0; foreach ($_productCollection as $_product): ?>
-                <?php
-                    // Array of active products for the navigation
-                    $activeProducts[] = $_product->getId();
-                ?>
+                    <div class="limiter">
+                        <div style="float: right">
+                            Sorter efter
+                            <select id="sort">
+                                <option selected="selected" value="name">Navn</option>
+                                <option value="price">Pris</option>
+                            </select>
 
-                <div id="<?php echo $_product->getId(); ?>" class="item">
-                    <a href="<?php echo $_product->getProductUrl() ?>"
-                       title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
-                       class="product-image">
-                        <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(150); ?>"
-                             alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
-                    </a>
-                    <h2 class="product-name">
-                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
-                            <?php
-                            $name = $_product->getName();
-                            $len = strlen($name);
-                            $maxlen = 21;
-                            if ($len > $maxlen) {
-                                $name = substr($name, 0, $maxlen) . "...";
-                            }
-                            echo $name;
-                            ?>
-                        </a>
-                    </h2>
-                    <?php echo $this->getPriceHtml($_product, true) ?>
-                    <div class="actions">
-                        <?php if($_product->isSaleable()): ?>
-                            <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
-                        <?php else: ?>
-                            <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
-                        <?php endif; ?>
+                            <a id="sortDirection" value="asc" style="padding: 0 5px 0 5px; display: none" title="<?php echo $this->__('Set Ascending Direction') ?>">
+                                <img src="<?php echo $this->getSkinUrl('images/i_desc_arrow.gif') ?>" alt="<?php echo $this->__('Set Ascending Direction') ?>" class="v-middle" />
+                            </a>
+
+                            <a id="sortDirection" value="desc" style="padding: 0 5px 0 5px;" title="<?php echo $this->__('Set Descending Direction') ?>">
+                                <img src="<?php echo $this->getSkinUrl('images/i_asc_arrow.gif') ?>" alt="<?php echo $this->__('Set Descending Direction') ?>" class="v-middle" />
+                            </a>
+                        </div>
                     </div>
                 </div>
-
-            <?php endforeach //productCollection ?>
             </div>
+
+            <?php
+                /** @var Mage_Catalog_Model_Product $_product */
+                foreach ($_productCollection as $_product) {
+                    // Array of active products for the navigation
+                    $activeProducts[] = $_product->getId();
+                }
+            ?>
+
+            <div name="itemList" id="name_asc" style="display: block" class="products-grid">
+                <?php
+                /** @var Mage_Catalog_Model_Product $_product */
+                foreach ($productsByName as $_product):
+                    ?>
+
+                    <div id="<?php echo $_product->getId(); ?>" class="item">
+                        <a href="<?php echo $_product->getProductUrl() ?>"
+                           title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+                           class="product-image">
+                            <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(150); ?>"
+                                 alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                        </a>
+                        <h2 class="product-name">
+                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+                                <?php
+                                $name = $_product->getName();
+                                $len = strlen($name);
+                                $maxlen = 21;
+                                if ($len > $maxlen) {
+                                    $name = substr($name, 0, $maxlen) . "...";
+                                }
+                                echo $name;
+                                ?>
+                            </a>
+                        </h2>
+                        <?php echo $this->getPriceHtml($_product, true) ?>
+                        <div class="actions">
+                            <?php if($_product->isSaleable()): ?>
+                                <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                            <?php else: ?>
+                                <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                <?php endforeach //productCollection ?>
+            </div>
+            <div name="itemList" id="name_desc" style="display: none" class="products-grid">
+                <?php
+                /** @var Mage_Catalog_Model_Product $_product */
+                foreach (array_reverse($productsByName) as $_product):
+                    ?>
+
+                    <div id="<?php echo $_product->getId(); ?>" class="item">
+                        <a href="<?php echo $_product->getProductUrl() ?>"
+                           title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+                           class="product-image">
+                            <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(150); ?>"
+                                 alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                        </a>
+                        <h2 class="product-name">
+                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+                                <?php
+                                $name = $_product->getName();
+                                $len = strlen($name);
+                                $maxlen = 21;
+                                if ($len > $maxlen) {
+                                    $name = substr($name, 0, $maxlen) . "...";
+                                }
+                                echo $name;
+                                ?>
+                            </a>
+                        </h2>
+                        <?php echo $this->getPriceHtml($_product, true) ?>
+                        <div class="actions">
+                            <?php if($_product->isSaleable()): ?>
+                                <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                            <?php else: ?>
+                                <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                <?php endforeach //productCollection ?>
+            </div>
+            <div name="itemList" id="price_asc" style="display: none" class="products-grid">
+                <?php
+                /** @var Mage_Catalog_Model_Product $_product */
+                foreach($productsByPrice as $_product):
+                    ?>
+
+                    <div id="<?php echo $_product->getId(); ?>" class="item">
+                        <a href="<?php echo $_product->getProductUrl() ?>"
+                           title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+                           class="product-image">
+                            <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(150); ?>"
+                                 alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                        </a>
+                        <h2 class="product-name">
+                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+                                <?php
+                                $name = $_product->getName();
+                                $len = strlen($name);
+                                $maxlen = 21;
+                                if ($len > $maxlen) {
+                                    $name = substr($name, 0, $maxlen) . "...";
+                                }
+                                echo $name;
+                                ?>
+                            </a>
+                        </h2>
+                        <?php echo $this->getPriceHtml($_product, true) ?>
+                        <div class="actions">
+                            <?php if($_product->isSaleable()): ?>
+                                <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                            <?php else: ?>
+                                <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                <?php endforeach //productCollection ?>
+            </div>
+            <div name="itemList" id="price_desc" style="display: none" class="products-grid">
+                <?php
+                /** @var Mage_Catalog_Model_Product $_product */
+                foreach(array_reverse($productsByPrice) as $_product):
+                    ?>
+
+                    <div id="<?php echo $_product->getId(); ?>" class="item">
+                        <a href="<?php echo $_product->getProductUrl() ?>"
+                           title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+                           class="product-image">
+                            <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(150); ?>"
+                                 alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                        </a>
+                        <h2 class="product-name">
+                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+                                <?php
+                                $name = $_product->getName();
+                                $len = strlen($name);
+                                $maxlen = 21;
+                                if ($len > $maxlen) {
+                                    $name = substr($name, 0, $maxlen) . "...";
+                                }
+                                echo $name;
+                                ?>
+                            </a>
+                        </h2>
+                        <?php echo $this->getPriceHtml($_product, true) ?>
+                        <div class="actions">
+                            <?php if($_product->isSaleable()): ?>
+                                <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                            <?php else: ?>
+                                <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                <?php endforeach //productCollection ?>
+            </div>
+
+
+
             <script type="text/javascript">//decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
             <div style="clear: both"></div>
             <div class="toolbar-bottom">
-                <?php echo $this->getToolbarHtml() ?>
+                <div id="toolbar" class="toolbar">
+                    <div class="pager">
+                        <p class="amount">
+                            <strong><?php echo $this->__('<span id="toolbarProductCount"></span> Vare(r)', $this->getTotalNum()) ?></strong>
+                        </p>
+
+                        <div class="limiter">
+                            <div style="float: right">
+                                Sorter efter
+                                <select id="sort">
+                                    <option selected="selected" value="name">Navn</option>
+                                    <option value="price">Pris</option>
+                                </select>
+
+                                <a id="sortDirection" value="asc" style="padding: 0 5px 0 5px; display: none" title="<?php echo $this->__('Set Ascending Direction') ?>">
+                                    <img src="<?php echo $this->getSkinUrl('images/i_desc_arrow.gif') ?>" alt="<?php echo $this->__('Set Ascending Direction') ?>" class="v-middle" />
+                                </a>
+
+                                <a id="sortDirection" value="desc" style="padding: 0 5px 0 5px;" title="<?php echo $this->__('Set Descending Direction') ?>">
+                                    <img src="<?php echo $this->getSkinUrl('images/i_asc_arrow.gif') ?>" alt="<?php echo $this->__('Set Descending Direction') ?>" class="v-middle" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
         </span>
+
+
+
+
+
     </div>
 </div>
 
@@ -457,6 +653,13 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 
         if(selectedMaterial > 0) {
             newHash += "material=" + selectedMaterial;
+        }
+
+        if(sortMode != "name" && sortDirection != "desc") {
+            if(newHash != "") {
+                newHash += "&";
+            }
+            newHash += "s=" + sortMode + "_" + sortDirection;
         }
 
         location.hash = newHash;
@@ -844,8 +1047,9 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 
             var n = toDisplay.length;
 
-            for(var i = 0; i < n; i++) {
-                $j(".products-grid div#" + toDisplay[i] + ".item").css("display", "block");
+            for(var i = 0; i < n; i++) { console.log(sortMode+" "+sortDirection);
+                $j("div.products-grid > div#" + toDisplay[i] + ".item").css("display", "block");
+
             }
         } else {
             var n = 0;
@@ -937,6 +1141,15 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 
     }
 
+    function changeItemList() {
+        $j("[name=itemList]").css("display", "none");
+        $j("[name=itemList]#"+sortMode+"_"+sortDirection).css("display", "block");
+    }
+    function changeDirectionArrow() {
+        $j("a#sortDirection").css("display", "inline");
+        $j("a#sortDirection[value="+sortDirection+"]").css("display", "none");
+    }
+
 
     var selectedCat = -1;
     var selectedBrand = -1;
@@ -970,6 +1183,22 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 
     });
 
+    var sortMode = "name";
+    $j("#sort").change(function() {
+        sortMode = $j(this).val();
+        $j("select#sort").val(sortMode);
+        changeItemList();
+        updateUrl();
+    });
+
+    var sortDirection = 'asc';
+    $j("a#sortDirection").click(function() {
+        sortDirection = $j(this).attr("value");
+        changeItemList();
+        changeDirectionArrow();
+        updateUrl();
+    })
+
     $j(document).ready(function() {
 
         var hashValues = getUrlHashValues();
@@ -984,9 +1213,18 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
             selectedMaterial = hashValues["material"];
         }
 
+        if(hashValues["s"]) { console.log(1);
+            var sort = hashValues["s"].split("_");
+            sortMode = sort[0];
+            sortDirection = sort[1];
+            $j("select#sort").val(sortMode);
+        }
+
         disableUnavailable();
         displayAvailableProducts();
         setActive();
+        changeItemList();
+        changeDirectionArrow();
 
     });
 
