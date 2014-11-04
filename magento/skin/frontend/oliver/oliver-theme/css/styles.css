@@ -2690,6 +2690,7 @@ tr.summary-details-excluded {
     border: 1px solid #797979;
 }
 
+
 .products-grid .product-name {
     /*min-height:2.7em;*/
     /*
@@ -2726,6 +2727,7 @@ tr.summary-details-excluded {
     width: 790px;
     margin: 0 auto;
 }
+
 
 /* View Type: List */
 .products-list li.item {

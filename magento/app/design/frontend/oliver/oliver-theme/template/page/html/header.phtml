@@ -1,3 +1,12 @@
+<style media="screen" type="text/css">
+    div.form-search {
+        #float: right;
+    }
+    div.block-cart {
+        #float: right;
+    }
+</style>
+
 <?php
 /**
  * Magento
@@ -44,6 +53,7 @@
         <?php endif?>
         <div class="quick-access">
             <?php echo $this->getChildHtml('topSearch'); ?>
+            <br />
             <?php echo $this->getChildHtml('topCart'); ?>
             <p class="welcome-msg"><?php echo $this->getWelcome() ?> <?php echo $this->getAdditionalHtml() ?></p>
             <?php // echo $this->getChildHtml('topLinks') ?>

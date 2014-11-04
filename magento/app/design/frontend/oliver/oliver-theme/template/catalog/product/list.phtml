@@ -72,6 +72,7 @@
 $activeProducts = Array();
 
 /*$currentUrl = preg_replace("@\?.*@", "", $this->helper('core/url')->getCurrentUrl());
+
 $currentMaterial = $this->getRequest()->getParam('material');
 
 $currentCategory = $this->getRequest()->getParam('category');
@@ -89,10 +90,19 @@ preg_match_all("@\/([\w\d-]+)[^$]@", $currentUrl, $page);
 $baseUrl = $this->getBaseUrl() . "produkter" . $params;
 
 
+*/
+#$_helper = $this->helper('catalog/output');
 
-$_helper = $this->helper('catalog/output');*/
+$_productCollection2 = $this->getLoadedProductCollection();
+$searchMatches = Array();
+foreach($_productCollection2 as $p) {
+    $searchMatches[] = $p->getId();
+}
 
-//$_productCollection = $this->getLoadedProductCollection();
+
+
+
+//echo "<pre>"; print_r($_productCollection); echo "</pre>";
 $_productCollection = Mage::getModel('catalog/product')->getCollection()
     ->addAttributeToSelect('*')
     ->addAttributeToFilter('status', array('eq' => 1))
@@ -151,7 +161,7 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
         <a href="#" id="reset">Nulstil filre</a>
         <div style="clear: both"></div>
         <h2>
-            Smykker
+            Produkter
         </h2>
         <div style="clear: both">
             <a id="category" value="-1">
@@ -195,6 +205,8 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
                 </span>
             </div>
         <? endforeach; ?>
+
+        <? /* HIDE MATERIALS
         <h2>
             Materiale
         </h2>
@@ -205,7 +217,7 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
         </div>
         <?
         /** @var $category Mage_Catalog_Model_Category */
-        foreach ($material_categories as $category) :?>
+        /*foreach ($material_categories as $category) :?>
             <div style="clear: both">
                 <a
                    id="material"
@@ -217,7 +229,7 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 
                 </span>
             </div>
-        <? endforeach; ?>
+        <? endforeach; */ ?>
     </div>
     <div id="right-column">
         <span id="msg">
@@ -459,6 +471,12 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 <script>
     // To avoid conflicts between prototype and jQuery.
     var $j = jQuery.noConflict();
+
+    <?php
+        // Convert PHP array to JS array.
+        $jsArray = json_encode($searchMatches);
+        echo 'var searchMatches = '. $jsArray .';';
+    ?>
 
     var categories = new Array();
     var brands = new Array();
@@ -1014,7 +1032,7 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 
     function displayAllProducts() {
         $j(".products-grid div.item").css("display", "block");
-        updateProductCount($j(".products-grid div.item").length)
+        updateProductCount(allProducts.length);
     }
 
     function displayAvailableProducts() {
@@ -1047,7 +1065,7 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 
             var n = toDisplay.length;
 
-            for(var i = 0; i < n; i++) { console.log(sortMode+" "+sortDirection);
+            for(var i = 0; i < n; i++) {
                 $j("div.products-grid > div#" + toDisplay[i] + ".item").css("display", "block");
 
             }
@@ -1141,6 +1159,21 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
 
     }
 
+    function enableSearchResults() {
+        hideAllProducts();
+
+        var toDisplay = searchMatches;
+
+        var n = toDisplay.length;
+
+        for(var i = 0; i < n; i++) {
+            $j("div.products-grid > div#" + toDisplay[i] + ".item").css("display", "block");
+        }
+
+        updateProductCount(n);
+
+    }
+
     function changeItemList() {
         $j("[name=itemList]").css("display", "none");
         $j("[name=itemList]#"+sortMode+"_"+sortDirection).css("display", "block");
@@ -1220,11 +1253,21 @@ $material_categories = Mage::getModel('catalog/category')->getCollection()
             $j("select#sort").val(sortMode);
         }
 
+        console.log("aaa: "+ searchMatches.size());
         disableUnavailable();
         displayAvailableProducts();
         setActive();
         changeItemList();
         changeDirectionArrow();
+
+        if( $j("input#isSearch").attr("value") == "true" ) {
+            enableSearchResults();
+
+            $j("div#left-column").css("display", "none");
+            $j("div#right-column").css("padding-left", "100px");
+            $j("div#right-column").css("padding-right", "100px");
+
+        }
 
     });
 

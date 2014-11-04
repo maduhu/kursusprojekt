@@ -94,22 +94,24 @@ class Mage_Catalog_Block_Product_List extends Mage_Catalog_Block_Product_Abstrac
         }
 
         if ($material != null) {
-            $this->_productCollection
-                ->addAttributeToFilter('materiale', array('eq' => (int)$material));
+            $this->_productCollection->addAttributeToFilter('materiale', array('eq' => (int)$material));
         }
 
         if ($category != null) {
 
-            $products = new Mage_Catalog_Model_Resource_Product_Collection();
+            $products = clone $this->_productCollection;
+            $products->clear();
 
             /** @var $product Mage_Catalog_Model_Product */
             foreach ($this->_productCollection as $product) {
                 if (in_array($category, $product->getCategoryIds())) {
-                    print_r($product->getId());
+                    if ($products->getItemById($product->getId()) == null) {
+                        $products->addItem($product);
+                    }
                 }
             }
 
-            //$this->_productCollection = $products;
+            $this->_productCollection = $products;
         }
 
         return $this->_productCollection;
